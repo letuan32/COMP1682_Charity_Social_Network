@@ -1,0 +1,27 @@
+﻿{
+  "ReverseProxy": {
+    "Routes": {
+      "post-route": {
+        "ClusterId": "post-cluster",
+        "AuthorizationPolicy": "rolePolicy",
+        "Match": {
+          "Path": "WeatherForecast/{**catchall}"
+        },
+        "Transforms": [
+          {
+            "PathPattern": "WeatherForecast/{**catchall}"
+          }
+        ]
+      }
+    },
+    "Clusters": {
+      "post-cluster": {
+        "Destinations": {
+          "destination1": {
+            "Address": "https://localhost:7081"
+          }
+        }
+      }
+    }
+  }
+}
