@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TCharity.Post.Entities;
-using TCharity.Post.Infrastructure;
 
-namespace TCharity.Post.Controllers;
+namespace TCharityDonation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -14,12 +12,10 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
-    private readonly PostContext _applicationDbContext;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, PostContext applicationDbContext)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
         _logger = logger;
-        _applicationDbContext = applicationDbContext;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]

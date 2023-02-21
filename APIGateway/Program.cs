@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = configuration["Jwt:Firebase:ValidIssuer"],
-            ValidAudience = configuration["Jwt:Firebase:ValidAudience"]
+            ValidAudience = configuration["Jwt:Firebase:ValidAudience"],
         };
     });
 

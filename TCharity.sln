@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "Identity\Identity.csproj", "{7D750C10-24C3-4B50-B139-AC61CF47E696}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCharityDonation", "TCharityDonation\TCharityDonation.csproj", "{384508A0-E8EE-4B48-8209-781F1157EF7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{7D750C10-24C3-4B50-B139-AC61CF47E696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D750C10-24C3-4B50-B139-AC61CF47E696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D750C10-24C3-4B50-B139-AC61CF47E696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{384508A0-E8EE-4B48-8209-781F1157EF7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{384508A0-E8EE-4B48-8209-781F1157EF7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{384508A0-E8EE-4B48-8209-781F1157EF7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{384508A0-E8EE-4B48-8209-781F1157EF7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

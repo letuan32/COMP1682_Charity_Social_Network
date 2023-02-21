@@ -28,6 +28,7 @@ public class AccountController : ControllerBase
             Password = regis.Password,
             DisplayName = regis.Name,
             Disabled = false,
+            PhotoUrl = "https://gravatar.com/avatar/77f1202c7e136494c2c26086672e91c0?s=400&d=robohash&r=x",
         };
         
         var claims = new Dictionary<string, object>()
