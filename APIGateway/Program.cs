@@ -2,7 +2,9 @@ using System.Security.Claims;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using T_PostService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +22,8 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .AddJsonFile($"YARP.{builder.Environment.EnvironmentName}.json", true, true)
     .Build();
-var proxyBuilder = builder.Services.AddReverseProxy();
-proxyBuilder.LoadFromConfig(configuration.GetSection("ReverseProxy"));
+// var proxyBuilder = builder.Services.AddReverseProxy();
+// proxyBuilder.LoadFromConfig(configuration.GetSection("ReverseProxy"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
@@ -38,6 +40,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = configuration["Jwt:Firebase:ValidAudience"],
         };
     });
+
+builder.Services.AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
+{
+    options.Address = new Uri("http://localhost:5279");
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddAuthorization(options =>
@@ -59,6 +69,11 @@ if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    
+    // Swagger
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    
 }
 
 app.UseHttpsRedirection();
@@ -67,10 +82,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapReverseProxy();
-});
+app.MapControllers();
+
 
 
 app.Run();
+
+

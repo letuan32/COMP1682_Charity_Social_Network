@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "T_PostService";
+
+package post;
+
+// The post service definition.
+service PostGrpc {
+  
+  // Sends a get post by id request
+  rpc GetPostById (GetPostByIdRequest) returns (PostReply);
+}
+
+// The request message containing the user's name.
+message GetPostByIdRequest {
+  string id = 1;
+}
+
+// The response message containing the greetings.
+message PostReply {
+  string id = 1;
+}

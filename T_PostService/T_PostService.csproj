@@ -9,11 +9,24 @@
 
     <ItemGroup>
         <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\post.proto" GrpcServices="Server">
+          <GrpcServices>Server</GrpcServices>
+          <Access>Public</Access>
+          <ProtoCompile>True</ProtoCompile>
+          <CompileOutputs>True</CompileOutputs>
+          <OutputDir>obj\Debug\net6.0\</OutputDir>
+          <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.51.0" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.51.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.52.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="MediatR" Version="11.0.0" />
         <PackageReference Include="MediatR.Contracts" Version="1.0.1" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />

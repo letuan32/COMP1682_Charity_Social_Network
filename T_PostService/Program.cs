@@ -1,6 +1,7 @@
 using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using T_PostService.GrpcServices;
 using T_PostService.Heplers;
 using T_PostService.Infrastructure;
 using T_PostService.Services;
@@ -38,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 // Configure the HTTP request pipeline.
 app.MapGrpcService<GreeterService>();
+app.MapGrpcService<PostGrpcService>();
+
 app.MapGet("/",
     () =>
         "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
