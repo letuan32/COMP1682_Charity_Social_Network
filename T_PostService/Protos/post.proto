@@ -9,14 +9,33 @@ service PostGrpc {
   
   // Sends a get post by id request
   rpc GetPostById (GetPostByIdRequest) returns (PostReply);
+  rpc GetPosts(GetPostsRequest) returns (GetPostsReply);
 }
 
-// The request message containing the user's name.
+
 message GetPostByIdRequest {
-  string id = 1;
+  int32 id = 1;
 }
 
-// The response message containing the greetings.
+
 message PostReply {
-  string id = 1;
+  int32 id = 1;
+}
+
+message GetPostsRequest{
+  
+}
+
+message GetPostsReply{
+  repeated GetPostsReplyItem posts = 1;
+}
+
+message GetPostsReplyItem{
+  int32 Id = 1;
+  string Content = 2;
+  int32 NumberOfDonation = 3;
+  string CreatedById = 4;
+  repeated string ImageUrls = 5;
+  repeated string VideoUrls = 6;
+  int32 NumberOfComment = 7;
 }

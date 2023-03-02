@@ -1,8 +1,10 @@
 using System.Security.Claims;
+using APIGateway.Configs;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using T_PostService;
 
@@ -41,9 +43,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add grpc
+var urls = builder.Configuration.GetSection("UrlConfig").Get<UrlConfig>();
 builder.Services.AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
 {
-    options.Address = new Uri("http://localhost:5279");
+    options.Address = new Uri(urls.PostGrpc);
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -65,16 +69,15 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-    
-    // Swagger
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    
 }
+
 
 app.UseHttpsRedirection();
 app.UseRouting();

@@ -4,10 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using T_PostService.GrpcServices;
 using T_PostService.Heplers;
 using T_PostService.Infrastructure;
+using T_PostService.MapperProfiles;
 using T_PostService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+IConfiguration configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", true, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
+    .Build();
+
+
+builder.Services.AddLogging();
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
@@ -16,17 +24,19 @@ builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
 
 
-IConfiguration configuration = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", true, true)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
-    .AddJsonFile($"YARP.{builder.Environment.EnvironmentName}.json", true, true)
-    .Build();
+// Add Auto mapper
+builder.Services.AddAutoMapper(typeof(PostMapperProfile));
+
+
 
 // Add services to the container.s
+builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<PostContext>(opt =>
     opt.UseNpgsql(configuration.GetConnectionString("Default")));
+
+
 
 
 builder.Services.AddTransient<UserPropertyService>();
@@ -37,6 +47,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapGrpcReflectionService();
 }
+
 // Configure the HTTP request pipeline.
 app.MapGrpcService<GreeterService>();
 app.MapGrpcService<PostGrpcService>();
