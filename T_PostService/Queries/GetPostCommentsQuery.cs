@@ -1,4 +1,4 @@
-﻿namespace TCharity.Post.Queries;
+﻿namespace T_PostService.Queries;
 
 public class GetPostCommentsQuery
 {

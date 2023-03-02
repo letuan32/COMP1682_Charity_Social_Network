@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using TCharity.Post.ViewModels;
+using T_PostService.ViewModels;
 
-namespace TCharity.Post.Queries;
+namespace T_PostService.Queries;
 
 public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, List<PostViewModel>>
 {

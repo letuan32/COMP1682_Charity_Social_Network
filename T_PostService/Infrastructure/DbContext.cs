@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TCharity.Post.Entities;
-using TCharity.Post.Heplers;
-using TCharity.Post.Infrastructure.Configurations;
+using T_PostService.Entities;
+using T_PostService.Infrastructure.Configurations;
 
-namespace TCharity.Post.Infrastructure;
+namespace T_PostService.Infrastructure;
 
 public class PostContext : DbContext
 {
@@ -23,12 +22,6 @@ public class PostContext : DbContext
         modelBuilder.ApplyConfiguration(new CommentEntityTypeConfiguration());
     }
 
-
-
-
-
-    
-    
     
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

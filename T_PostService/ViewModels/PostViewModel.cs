@@ -1,4 +1,4 @@
-﻿namespace TCharity.Post.ViewModels;
+﻿namespace T_PostService.ViewModels;
 
 public record PostViewModel
 {

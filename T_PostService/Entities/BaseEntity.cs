@@ -1,4 +1,4 @@
-﻿namespace TCharity.Post.Entities;
+﻿namespace T_PostService.Entities;
 
 public abstract class BaseIdEntity<T> 
 {

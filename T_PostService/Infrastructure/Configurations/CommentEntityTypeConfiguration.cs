@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TCharity.Post.Entities;
+using T_PostService.Entities;
+using TCharity.Post.Infrastructure.Configurations;
 
-namespace TCharity.Post.Infrastructure.Configurations;
+namespace T_PostService.Infrastructure.Configurations;
 
 public class CommentEntityTypeConfiguration : BaseEntityTypeConfiguration<CommentEntity>
 {
