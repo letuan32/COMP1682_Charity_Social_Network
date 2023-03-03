@@ -1,22 +1,31 @@
+using System.Security.Authentication;
 using System.Security.Claims;
 using APIGateway.Configs;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using T_PostService;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
+// For running in Railway
+var portVar = Environment.GetEnvironmentVariable("PORT");
+if (portVar is { Length: > 0 } && int.TryParse(portVar, out int port))
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(port);
+    });
+}
 // Add services to the container.
-
 builder.Services.AddControllers();
 
+var filePath = Path.Combine(builder.Environment.ContentRootPath, "firebase-credentials.json");
 FirebaseApp.Create(new AppOptions
 {
-    Credential = GoogleCredential.FromFile(@"D:\TuanLe\TCharity\TCharity\tcharity-identity-service-firebase-adminsdk-o2fik-a1d7743340.json")
+    Credential = GoogleCredential.FromFile(filePath)
 });
 
 IConfiguration configuration = new ConfigurationBuilder()
@@ -44,10 +53,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Add grpc
+;
 var urls = builder.Configuration.GetSection("UrlConfig").Get<UrlConfig>();
 builder.Services.AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
 {
     options.Address = new Uri(urls.PostGrpc);
+    options.ChannelOptionsActions.Add(channelOptions =>
+    {
+        channelOptions.HttpHandler = new HttpClientHandler
+        {
+            SslProtocols = SslProtocols.None,
+            // ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+    });
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -72,11 +90,11 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-if (!app.Environment.IsDevelopment())
-{
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+// if (!app.Environment.IsDevelopment())
+// {
+//     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//     app.UseHsts();
+// }
 
 
 app.UseHttpsRedirection();

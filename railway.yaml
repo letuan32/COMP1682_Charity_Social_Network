@@ -1,0 +1,7 @@
+version: '1'
+name: FYP
+services:
+  T_PostService:
+    dockerfile: Dockerfile_PostService
+    envs:
+      - PORT=5279

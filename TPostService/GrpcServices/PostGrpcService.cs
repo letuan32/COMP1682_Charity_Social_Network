@@ -30,6 +30,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
 
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
+        _logger.LogInformation("Receive request");
         var response = await _postService.GetPostsAsync();
 
         if (response != null)

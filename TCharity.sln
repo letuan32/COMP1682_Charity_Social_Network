@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "Identity\Identity.csproj", "{7D750C10-24C3-4B50-B139-AC61CF47E696}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T_PostService", "T_PostService\T_PostService.csproj", "{0E7B2256-1E64-43E4-90C1-BFFE21DD3A9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPostService", "TPostService\TPostService.csproj", "{0E7B2256-1E64-43E4-90C1-BFFE21DD3A9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
