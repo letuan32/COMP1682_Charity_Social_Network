@@ -1,4 +1,7 @@
-﻿namespace T_PostService.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace TPostService.Entities;
 
 public class PostEntity : BaseIdEntity<int>, IBaseEntity
 {

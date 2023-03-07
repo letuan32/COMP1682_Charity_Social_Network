@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace T_PostService.Heplers;
+namespace TPostService.Heplers;
 
 public class UserPropertyService
 {

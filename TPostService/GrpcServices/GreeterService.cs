@@ -1,7 +1,8 @@
+using System.Threading.Tasks;
 using Grpc.Core;
-using T_PostService;
+using Microsoft.Extensions.Logging;
 
-namespace T_PostService.Services;
+namespace TPostService.GrpcServices;
 
 public class GreeterService : Greeter.GreeterBase
 {

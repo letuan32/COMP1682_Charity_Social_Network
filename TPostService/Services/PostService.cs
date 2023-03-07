@@ -1,6 +1,8 @@
-﻿using T_PostService.ViewModels;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using TPostService.ViewModels;
 
-namespace T_PostService.Services;
+namespace TPostService.Services;
 
 public class PostService : IPostService
 {
@@ -17,7 +19,17 @@ public class PostService : IPostService
                 CreatedById = "user123",
                 ImageUrls = new List<string> { "https://example.com/image1.jpg", "https://example.com/image2.jpg" },
                 VideoUrls = new List<string> { "https://example.com/video1.mp4" },
-                NumberOfComment = 2
+                NumberOfComment = 2,
+                Author = new PostAuthorViewModel()
+                {
+                    Email = "test@gmail.com",
+                    DisplayName = "Test Name",
+                    AvatarUrl = "https://gravatar.com/avatar/3fa2989800b80fc30df5ebcb707d7637?s=400&d=robohash&r=x"
+                },
+                Location = "Da Nang",
+                Likes = 132,
+                CreatedAt = DateTime.Now
+
             },
             new()
             {
@@ -27,7 +39,16 @@ public class PostService : IPostService
                 CreatedById = "user2",
                 ImageUrls = new List<string> { "https://example.com/image2-1.jpg", "https://example.com/image2-2.jpg" },
                 VideoUrls = null,
-                NumberOfComment = 3
+                NumberOfComment = 3,
+                Author = new()
+                {
+                    Email = "letuanlttt@gmail.com",
+                    DisplayName = "Tuan Le",
+                    AvatarUrl = "https://gravatar.com/avatar/96f9e4848bbcd456d5640e142dc04072?s=400&d=robohash&r=x"
+                },
+                Location = "Da Nang",
+                Likes = 132,
+                CreatedAt = DateTime.Now
             }
         };
     }

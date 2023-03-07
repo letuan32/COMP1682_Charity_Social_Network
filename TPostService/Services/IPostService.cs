@@ -1,6 +1,8 @@
-﻿using T_PostService.ViewModels;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using TPostService.ViewModels;
 
-namespace T_PostService.Services;
+namespace TPostService.Services;
 
 public interface IPostService
 {

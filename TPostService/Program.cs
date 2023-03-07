@@ -1,26 +1,14 @@
 using System.Reflection;
 using MediatR;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using T_PostService.GrpcServices;
-using T_PostService.Heplers;
-using T_PostService.Infrastructure;
-using T_PostService.MapperProfiles;
-using T_PostService.Services;
+using TPostService.GrpcServices;
+using TPostService.Heplers;
+using TPostService.Infrastructure;
+using TPostService.MapperProfiles;
+using TPostService.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
-// For running in Railway
-var portVar = Environment.GetEnvironmentVariable("PORT");
-if (portVar is { Length: > 0 } && int.TryParse(portVar, out int port))
-{
-    builder.WebHost.ConfigureKestrel(options =>
-    {
-        options.ListenAnyIP(port, listenOptions =>
-        {
-            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-        });
-    });
-}
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", true, true)
@@ -34,13 +22,7 @@ builder.Services.AddLogging();
 
 // Add services to the container.
 builder.Services.AddGrpc();
-builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder =>
-{
-    builder.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
-}));
+builder.Services.AddGrpcReflection();
 
 
 // Add Auto mapper
@@ -58,26 +40,21 @@ builder.Services.AddDbContext<PostContext>(opt =>
 
 
 
-
 builder.Services.AddTransient<UserPropertyService>();
 
 
 var app = builder.Build();
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapGrpcReflectionService();
-// }
-
-
-app.UseRouting();
-// app.MapGrpcService<GreeterService>();
-// app.MapGrpcService<PostGrpcService>();
-app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
-app.UseCors();
-app.UseEndpoints(endpoints =>
+if (app.Environment.IsDevelopment())
 {
-    endpoints.MapGrpcService<GreeterService>().EnableGrpcWeb();
-    endpoints.MapGrpcService<PostGrpcService>().EnableGrpcWeb();
+    app.MapGrpcReflectionService();
+}
 
-});
+// Configure the HTTP request pipeline.
+app.MapGrpcService<GreeterService>();
+app.MapGrpcService<PostGrpcService>();
+
+app.MapGet("/",
+    () =>
+        "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+
 app.Run();

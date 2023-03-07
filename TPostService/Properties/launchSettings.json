@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "T_PostService": {
+    "TPostService": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

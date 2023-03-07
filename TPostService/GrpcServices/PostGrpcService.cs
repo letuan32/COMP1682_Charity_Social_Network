@@ -1,8 +1,13 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading.Tasks;
+using AutoMapper;
 using Grpc.Core;
-using T_PostService.Services;
+using Microsoft.Extensions.Logging;
+using T_PostService;
+using TPostService.Services;
 
-namespace T_PostService.GrpcServices;
+
+namespace TPostService.GrpcServices;
 
 public class PostGrpcService : PostGrpc.PostGrpcBase
 {

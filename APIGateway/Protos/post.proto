@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "T_PostService";
-
+option csharp_namespace = "TPostService";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 package post;
 
 // The post service definition.
@@ -27,10 +28,10 @@ message GetPostsRequest{
 }
 
 message GetPostsReply{
-  repeated GetPostsReplyItem posts = 1;
+  repeated PostItemReply posts = 1;
 }
 
-message GetPostsReplyItem{
+message PostItemReply{
   int32 Id = 1;
   string Content = 2;
   int32 NumberOfDonation = 3;
@@ -38,4 +39,13 @@ message GetPostsReplyItem{
   repeated string ImageUrls = 5;
   repeated string VideoUrls = 6;
   int32 NumberOfComment = 7;
+  PostAuthorReply Author = 8;
+  google.protobuf.Timestamp CreatedAt = 9;
+  int32 Likes = 10;
+}
+
+message PostAuthorReply{
+  string Email = 1;
+  string DisplayName = 2;
+  string AvatarUrl = 3;
 }

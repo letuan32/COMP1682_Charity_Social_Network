@@ -1,4 +1,6 @@
-﻿namespace T_PostService.Entities;
+﻿using System;
+
+namespace TPostService.Entities;
 
 public interface IBaseEntity
 {

@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using T_PostService;
 
+
+using Microsoft.AspNetCore.Mvc;
+using TPostService;
 
 namespace APIGateway.Controllers;
 
@@ -24,5 +24,4 @@ public class PostController : ControllerBase
         var response = await _client.GetPostsAsync(new GetPostsRequest());
         return Ok(response);
     }
-    
 }

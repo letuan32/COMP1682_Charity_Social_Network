@@ -1,15 +1,24 @@
-﻿using AutoMapper;
-using T_PostService.ViewModels;
+﻿using System.Collections.Generic;
+using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
+using TPostService.ViewModels;
 
-namespace T_PostService.MapperProfiles;
+
+namespace TPostService.MapperProfiles;
 
 public class PostMapperProfile : Profile
 {
     public PostMapperProfile()
     {
-        CreateMap<GetPostsReplyItem, PostViewModel>().ReverseMap();
+        CreateMap<PostAuthorReply, PostAuthorViewModel>().ReverseMap();
+        CreateMap<PostViewModel, PostItemReply>()
+            .ForMember(d => d.Author, opt => opt.MapFrom(s => s.Author))
+            .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => Timestamp.FromDateTime(s.CreatedAt.ToUniversalTime())))
+            .ReverseMap();
         CreateMap<IList<PostViewModel>, GetPostsReply>()
             .ForMember(d => d.Posts, 
                 opt => opt.MapFrom(d => d));
+
+
     }
 }

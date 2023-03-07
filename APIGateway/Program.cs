@@ -5,7 +5,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using T_PostService;
+using TPostService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +19,18 @@ if (portVar is { Length: > 0 } && int.TryParse(portVar, out int port))
         options.ListenAnyIP(port);
     });
 }
+
+// CORS 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+        });
+});
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -99,7 +111,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 

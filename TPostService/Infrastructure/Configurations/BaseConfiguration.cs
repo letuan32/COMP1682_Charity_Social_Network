@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using T_PostService.Entities;
 using T_PostService.Infrastructure.Configurations;
+using TPostService.Entities;
 
 
 namespace TCharity.Post.Infrastructure.Configurations;

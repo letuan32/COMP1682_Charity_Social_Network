@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using T_PostService.Entities;
 using T_PostService.Infrastructure.Configurations;
+using TPostService.Entities;
 
-namespace T_PostService.Infrastructure;
+
+namespace TPostService.Infrastructure;
 
 public class PostContext : DbContext
 {

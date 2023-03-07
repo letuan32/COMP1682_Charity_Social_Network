@@ -1,4 +1,4 @@
-﻿namespace T_PostService.Entities;
+﻿namespace TPostService.Entities;
 
 public abstract class BaseIdEntity<T> 
 {

@@ -1,8 +1,12 @@
-﻿using MediatR;
-using T_PostService.Services;
-using T_PostService.ViewModels;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using TPostService.Services;
+using TPostService.ViewModels;
 
-namespace T_PostService.Queries;
+namespace TPostService.Queries;
 
 public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IList<PostViewModel>?>
 {
