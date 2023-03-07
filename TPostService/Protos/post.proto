@@ -11,6 +11,7 @@ service PostGrpc {
   // Sends a get post by id request
   rpc GetPostById (GetPostByIdRequest) returns (PostReply);
   rpc GetPosts(GetPostsRequest) returns (GetPostsReply);
+  rpc GetPostDonationBankingDescription(GetDonationBankingDescriptionRequest) returns (GetDonationBankingDescriptionReply);
 }
 
 
@@ -42,10 +43,20 @@ message PostItemReply{
   PostAuthorReply Author = 8;
   google.protobuf.Timestamp CreatedAt = 9;
   int32 Likes = 10;
+  string BankingDescription = 11;
 }
 
 message PostAuthorReply{
   string Email = 1;
   string DisplayName = 2;
   string AvatarUrl = 3;
+}
+
+message GetDonationBankingDescriptionRequest{
+  int32 postId = 1;
+}
+
+message GetDonationBankingDescriptionReply{
+  int32 postId = 1;
+  string description = 2;
 }

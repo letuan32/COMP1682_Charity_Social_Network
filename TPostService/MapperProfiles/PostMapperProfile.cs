@@ -19,6 +19,7 @@ public class PostMapperProfile : Profile
             .ForMember(d => d.Posts, 
                 opt => opt.MapFrom(d => d));
 
+        CreateMap<GetDonationBankingDescriptionReply, PostBakingDescriptionViewModel>().ReverseMap();
 
     }
 }

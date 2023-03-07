@@ -24,4 +24,12 @@ public class PostController : ControllerBase
         var response = await _client.GetPostsAsync(new GetPostsRequest());
         return Ok(response);
     }
+    
+    [HttpGet]
+    [Route("bankingDescription")]
+    public async Task<IActionResult> GetPostBankingDescription([FromQuery]int postId)
+    {
+        var response = await _client.GetPostDonationBankingDescriptionAsync(new GetDonationBankingDescriptionRequest(){PostId = postId});
+        return Ok(response);
+    }
 }

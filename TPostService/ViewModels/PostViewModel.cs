@@ -13,7 +13,6 @@ public record PostViewModel
     public int NumberOfComment { get; set; }
     public PostAuthorViewModel Author { get; set; }
     public string CreatedById { get; set; }
-
     public DateTime CreatedAt { get; set; }
     public int Likes { get; set; }
 

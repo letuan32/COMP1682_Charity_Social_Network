@@ -9,7 +9,7 @@ public class PostService : IPostService
     public async Task<IList<PostViewModel>?> GetPostsAsync()
     {
         // TODO: Implement
-        return new List<PostViewModel>()
+        var viewModels = new List<PostViewModel>()
         {
             new()
             {
@@ -51,5 +51,18 @@ public class PostService : IPostService
                 CreatedAt = DateTime.Now
             }
         };
+
+        return await Task.FromResult<IList<PostViewModel>>(viewModels);
+    }
+    public async Task<PostBakingDescriptionViewModel?> GetPostBankingDescriptionAsync(int postId)
+    {
+        // TODO: Implement
+        var viewModel = new PostBakingDescriptionViewModel()
+        {
+            PostId = 1,
+            Description = "T01"
+        };
+
+        return await Task.FromResult(viewModel);
     }
 }
