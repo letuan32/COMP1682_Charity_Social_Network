@@ -5,6 +5,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TDonation;
 using TPostService;
 
 
@@ -70,6 +71,19 @@ var urls = builder.Configuration.GetSection("UrlConfig").Get<UrlConfig>();
 builder.Services.AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
 {
     options.Address = new Uri(urls.PostGrpc);
+    options.ChannelOptionsActions.Add(channelOptions =>
+    {
+        channelOptions.HttpHandler = new HttpClientHandler
+        {
+            SslProtocols = SslProtocols.None,
+            // ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+    });
+});
+
+builder.Services.AddGrpcClient<Payment.PaymentClient>(options =>
+{
+    options.Address = new Uri(urls.PaymentGrpc);
     options.ChannelOptionsActions.Add(channelOptions =>
     {
         channelOptions.HttpHandler = new HttpClientHandler

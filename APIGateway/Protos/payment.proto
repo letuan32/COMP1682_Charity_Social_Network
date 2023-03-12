@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "TDonation";
+
+package payment;
+import "google/protobuf/descriptor.proto";
+import "google/protobuf/field_mask.proto";
+// The greeting service definition.
+service Payment {
+  // Sends a greeting
+  rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionReply);
+}
+
+// The request to make transaction
+message CreateTransactionRequest {
+  string userId = 1;
+  string userEmail = 2;
+  int32 amount = 3;
+  string description = 4;
+  int32 bankingType = 5;
+  string callback_url = 6;
+  int32 payment_service = 7;
+}
+
+// The response message containing the greetings.
+message CreateTransactionReply {
+  string order_url = 1;
+  string trans_token = 2;
+  string message = 3;
+}

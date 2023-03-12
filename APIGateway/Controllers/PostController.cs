@@ -19,7 +19,14 @@ public class PostController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPosts()
+    public async Task<IActionResult> GetPostsAsync()
+    {
+        var response = await _client.GetPostsAsync(new GetPostsRequest());
+        return Ok(response);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetPostByIdAysnc()
     {
         var response = await _client.GetPostsAsync(new GetPostsRequest());
         return Ok(response);
