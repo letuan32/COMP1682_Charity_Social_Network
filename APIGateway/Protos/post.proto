@@ -21,7 +21,17 @@ message GetPostByIdRequest {
 
 
 message PostReply {
-  int32 id = 1;
+  int32 Id = 1;
+  string Content = 2;
+  int32 NumberOfDonation = 3;
+  string CreatedById = 4;
+  repeated string ImageUrls = 5;
+  repeated string VideoUrls = 6;
+  int32 NumberOfComment = 7;
+  PostAuthorReply Author = 8;
+  google.protobuf.Timestamp CreatedAt = 9;
+  int32 Likes = 10;
+  string BankingDescription = 11;
 }
 
 message GetPostsRequest{

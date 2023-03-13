@@ -1,6 +1,9 @@
-﻿namespace T_PostService.Queries;
+﻿using MediatR;
+using TPostService.ViewModels;
 
-public class GetPostDetailQuery
+namespace TPostService.Queries;
+
+public class GetPostDetailQuery : IRequest<PostViewModel>
 {
-    
+    public int PostId { get; set; }
 }

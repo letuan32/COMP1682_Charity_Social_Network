@@ -26,9 +26,10 @@ public class PostController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetPostByIdAysnc()
+    [Route("{id}")]
+    public async Task<IActionResult> GetPostByIdAsync([FromRoute] int id)
     {
-        var response = await _client.GetPostsAsync(new GetPostsRequest());
+        var response = await _client.GetPostByIdAsync(new GetPostByIdRequest(){Id = id});
         return Ok(response);
     }
     

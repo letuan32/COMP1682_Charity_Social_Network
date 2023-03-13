@@ -21,5 +21,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             PaymentServiceEnum.ZaloPay => await _zaloPayService.CreateTransactionAsync(request),
             _ => throw new NotImplementedException()
         };
+        
+        // TODO: Save the transaction to db if success
     }
 }

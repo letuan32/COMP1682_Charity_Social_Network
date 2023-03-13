@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace APIGateway.ZaloPayHelper
+namespace TDonation.Services.ZaloPayHelper
 {
     public class HttpHelper
     {

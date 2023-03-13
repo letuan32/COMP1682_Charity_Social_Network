@@ -1,4 +1,4 @@
-﻿namespace T_PostService.Queries;
+﻿namespace TPostService.Queries;
 
 public class GetPostCommentsQuery
 {

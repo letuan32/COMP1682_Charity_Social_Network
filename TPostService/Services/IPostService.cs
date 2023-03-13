@@ -7,6 +7,7 @@ namespace TPostService.Services;
 public interface IPostService
 {
     Task<IList<PostViewModel>?> GetPostsAsync();
+    Task<PostViewModel?> GetPostByIdAsync(int postId);
     Task<PostBakingDescriptionViewModel?> GetPostBankingDescriptionAsync(int postId);
 
 }

@@ -34,37 +34,9 @@ public class PaymentController : ControllerBase
 
         return Ok(response);
     }
-    
-    // [HttpGet]
-    // [Route("banks")]
-    // public async IAsyncEnumerable<BankDTO> GetBanks()
-    // {
-        // string appid = "2554";
-        // string key1 = "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn";
-        // string key2 = "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf";
-        // string createOrderUrl = "https://sb-openapi.zalopay.vn/v2/create";
-        // string getBankListUrl = "https://sbgateway.zalopay.vn/api/getlistmerchantbanks";
-        // var reqtime = Utils.GetTimeStamp().ToString();
-        //
-        // Dictionary<string, string> param = new Dictionary<string, string>();
-        // param.Add("appid", appid); 
-        // param.Add("reqtime", reqtime); 
-        // param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key1, appid+"|"+reqtime));
-        //
-        // var result = await HttpHelper.PostFormAsync<BankListResponse>(getBankListUrl, param);
-        //
-        // foreach(var entry in result.banks) {
-        //     var pmcid = entry.Key;
-        //     var banklist = entry.Value;
-        //     foreach (var bank in banklist)
-        //     {
-        //         yield return bank;
-        //     }
-        // }
-    //     throw new NotImplementedException();
-    // }
 
     [HttpPost]
+    [Route("callBack")]
     public async Task<IActionResult> CallBack(CallbackData cbdata)
     {
         // var result = new Dictionary<string, object>();

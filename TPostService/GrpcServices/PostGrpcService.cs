@@ -28,11 +28,16 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
 
     public override async Task<PostReply> GetPostById(GetPostByIdRequest request, ServerCallContext context)
     {
-        // TODO: Implement
-        return new PostReply()
+        _logger.LogInformation("Receive request get post detail. Id = {id}", request.Id);
+        var response = await _mediator.Send(new GetPostDetailQuery() { PostId = request.Id });
+            
+        if (response != null)
         {
-            Id =  new Random().Next(1,10)
-        };
+            return _mapper.Map<PostReply>(response);
+        }
+        context.Status = new Status(StatusCode.NotFound, "Not found");
+
+        return null;
     }
 
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)

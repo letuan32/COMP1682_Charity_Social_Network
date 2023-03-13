@@ -1,5 +1,4 @@
-﻿using APIGateway.ZaloPayHelper;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using TDonation.Services.Interfaces;
 using TDonation.Utils;
