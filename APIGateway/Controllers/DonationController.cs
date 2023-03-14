@@ -1,4 +1,7 @@
-﻿using APIGateway.Enums;
+﻿using APIGateway.CQRS.Commands;
+using APIGateway.Enums;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TDonation;
 
@@ -6,32 +9,26 @@ using TDonation;
 namespace APIGateway.Controllers;
 
 [ApiController]
+// [Authorize]
 [Route("[controller]")]
-public class PaymentController : ControllerBase
+public class DonationController : ControllerBase
 {
     private readonly Payment.PaymentClient _paymentClient;
     private readonly ILogger<WeatherController> _logger;
+    private readonly IMediator _mediator;
 
-    public PaymentController(Payment.PaymentClient paymentClient, ILogger<WeatherController> logger)
+
+    public DonationController(Payment.PaymentClient paymentClient, ILogger<WeatherController> logger, IMediator mediator)
     {
         _paymentClient = paymentClient;
         _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTransaction()
-        {
-        var response = await _paymentClient.CreateTransactionAsync(new CreateTransactionRequest()
-        {
-            UserId = Guid.NewGuid().ToString(),
-            UserEmail = "Email@gmail.com",
-            Amount = 10000,
-            Description = "Ung ho",
-            BankingType = (int)BankingTypeEnum.Visa,
-            CallbackUrl = string.Empty,
-            PaymentService = (int)PaymentServiceEnum.ZaloPay
-        });
-
+    public async Task<IActionResult> CreateTransaction(CreateDonationTransactionCommand request)
+    {
+        var response = await _mediator.Send(request);
         return Ok(response);
     }
 

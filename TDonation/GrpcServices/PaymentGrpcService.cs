@@ -3,7 +3,7 @@ using Grpc.Core;
 using MediatR;
 using TDonation.CQRS.Commands;
 
-namespace TDonation.Services;
+namespace TDonation.GrpcServices;
 
 public class PaymentGrpcService : Payment.PaymentBase
 {

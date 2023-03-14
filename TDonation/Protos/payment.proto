@@ -15,11 +15,12 @@ service Payment {
 message CreateTransactionRequest {
   string userId = 1;
   string userEmail = 2;
-  int32 amount = 3;
+  int64 amount = 3;
   string description = 4;
   int32 bankingType = 5;
   string callback_url = 6;
   int32 payment_service = 7;
+  int32 postId = 8;
 }
 
 // The response message containing the greetings.

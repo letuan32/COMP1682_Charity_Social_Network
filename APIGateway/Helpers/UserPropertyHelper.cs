@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace TPostService.Heplers;
+namespace APIGateway.Helpers;
 
 public class UserPropertyHelper
 {

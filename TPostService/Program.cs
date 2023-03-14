@@ -40,7 +40,7 @@ builder.Services.AddDbContext<PostContext>(opt =>
 
 
 
-builder.Services.AddTransient<UserPropertyService>();
+builder.Services.AddTransient<UserPropertyHelper>();
 
 
 var app = builder.Build();

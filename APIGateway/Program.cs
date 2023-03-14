@@ -1,8 +1,12 @@
+using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
+using APIGateway.AutoMapper;
 using APIGateway.Configs;
+using APIGateway.Helpers;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TDonation;
@@ -96,20 +100,24 @@ builder.Services.AddGrpcClient<Payment.PaymentClient>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<UserPropertyHelper>();
+builder.Services.AddAutoMapper(typeof(MapperProfile));
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-
-builder.Services.AddAuthorization(options =>
-{
-    // This is a default authorization policy which requires authentication
-    options.AddPolicy("admin", policy =>
-    {
-        policy.RequireAuthenticatedUser().RequireClaim(ClaimTypes.Role,"admin");
-    });
-    options.AddPolicy("user", policy =>
-    {
-        policy.RequireAuthenticatedUser().RequireClaim(ClaimTypes.Role,"user");;
-    });
-});
+// builder.Services.AddAuthorization(options =>
+// {
+//     // This is a default authorization policy which requires authentication
+//     options.AddPolicy("admin", policy =>
+//     {
+//         policy.RequireAuthenticatedUser().RequireClaim(ClaimTypes.Role,"admin");
+//     });
+//     options.AddPolicy("user", policy =>
+//     {
+//         policy.RequireAuthenticatedUser().RequireClaim(ClaimTypes.Role,"user");;
+//     });
+// });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

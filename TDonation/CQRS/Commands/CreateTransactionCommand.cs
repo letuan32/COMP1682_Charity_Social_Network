@@ -9,10 +9,11 @@ public class CreateTransactionCommand : IRequest<CreateTransactionResponse>
     public string UserId { get; set; }
     public string UserEmail { get; set; }
     // public string Item { get; set; } = String.Empty;
-    public int Amount { get; set; }
+    public long Amount { get; set; }
     public string Description { get; set; } = String.Empty;
     public string? CallbackUrl { get; set; }
     public BankingType BankingType { get; set; }
+    public int PostId { get; set; }
 
 }
 
