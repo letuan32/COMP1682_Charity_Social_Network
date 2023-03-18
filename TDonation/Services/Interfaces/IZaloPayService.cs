@@ -7,4 +7,7 @@ namespace TDonation.Services.Interfaces;
 public interface IZaloPayService
 {
     Task<CreateTransactionResponse> CreateTransactionAsync(CreateTransactionCommand request);
+    Task<HandleZaloCallbackResponse> HandZaloCallbackAsync(HandleZaloCallbackCommand request,
+        CancellationToken cancellationToken);
+
 }

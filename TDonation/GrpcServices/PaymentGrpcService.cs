@@ -24,4 +24,12 @@ public class PaymentGrpcService : Payment.PaymentBase
         var response = await _mediator.Send(_mapper.Map<CreateTransactionCommand>(request));
         return _mapper.Map<CreateTransactionReply>(response);
     }
+
+    public override async Task<HandleZaloCallbackReply> HandleZaloCallback(HandleZaloCallbackRequest request, ServerCallContext context)
+    {
+        var response =  await _mediator.Send(_mapper.Map<HandleZaloCallbackCommand>(request));
+        
+        return _mapper.Map<HandleZaloCallbackReply>(response);
+
+    }
 }

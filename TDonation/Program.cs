@@ -1,5 +1,7 @@
 using System.Reflection;
+using MassTransit;
 using MediatR;
+using TDonation.Consumers;
 using TDonation.GrpcServices;
 using TDonation.MapperProfiles;
 using TDonation.Services;
@@ -12,6 +14,27 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .Build();
+
+// Add Rabbit
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<PaymentConsumer>();
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+    {
+        cfg.Host(new Uri("rabbitmq://localhost"),h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        cfg.ReceiveEndpoint("zalo-callback", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 100));
+            ep.ConfigureConsumer<PaymentConsumer>(provider);
+        });
+    }));
+});
+builder.Services.AddMassTransitHostedService();
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
@@ -26,7 +49,7 @@ builder.Services.AddAutoMapper(typeof(MapperProfile));
 // Add Service
 builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 
-// Add Mediat
+// Add MediatR
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 

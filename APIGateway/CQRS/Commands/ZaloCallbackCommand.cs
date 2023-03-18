@@ -1,11 +1,11 @@
-﻿using MediatR;
+﻿using APIGateway.DTOs.Donations;
+using MediatR;
 
 namespace APIGateway.CQRS.Commands;
 
-public class ZaloCallbackCommand : IRequest<Unit>
+public class ZaloCallbackCommand : IRequest<HandleZaloCallbackResponse>
 {
-    public string data { get; set; }
-    public string mac { get; set; }
-    public int type { get; set; }
-    public Dictionary<string, object>? item { get; set; }
+    public string Data { get; set; }
+    public string Mac { get; set; }
+    public int Type { get; set; }
 }

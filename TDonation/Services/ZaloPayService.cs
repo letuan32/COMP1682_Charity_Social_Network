@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using TDonation.CQRS.Commands;
 using TDonation.CQRS.ViewModels;
 using TDonation.Services.DTOs.ZaloPay;
+using TDonation.Services.ZaloPayHelper.Crypto;
 
 namespace TDonation.Services;
 
@@ -28,20 +29,49 @@ public class ZaloPayService : IZaloPayService
     public async Task<CreateTransactionResponse> CreateTransactionAsync(CreateTransactionCommand request)
     {
         var createZaloTransactionRequest = new CreateZaloPayTransactionRequest(request, _zaloPayOption);
-        // var requestBody = createZaloTransactionRequest.ParseToRequestParams();
 
         try
         {
             var response = await _zaloPayOption.CreateOrderUrl
                 .PostJsonAsync(createZaloTransactionRequest)
                 .ReceiveJson<CreateZaloTransactionResponse>();
-
+            if (response.ReturnCode == 2)
+                return new CreateTransactionResponse(null, null,
+                    $"Failure to create transaction. {response.ReturnMessage}");
+            // TODO: Save transaction to db
             return _mapper.Map<CreateTransactionResponse>(response);
         }
         catch (FlurlHttpException e)
         {
             _logger.LogError("Failure to create ZaloPay transaction. {Message}", e.Message);
             throw;
+        }
+    }
+
+    public Task<HandleZaloCallbackResponse> HandZaloCallbackAsync(HandleZaloCallbackCommand request,
+        CancellationToken cancellationToken)
+    {
+        
+        try {
+            var mac = HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, _zaloPayOption.Key2, request.Data);
+
+            // kiểm tra callback hợp lệ (đến từ ZaloPay server)
+            if (!request.Mac.Equals(mac)) {
+                // callback không hợp lệ
+                return Task.FromResult(new HandleZaloCallbackResponse(-1, "mac not equal"));
+            }
+
+            // thanh toán thành công
+            // merchant cập nhật trạng thái cho đơn hàng
+            var data = request.ParsedData;
+
+            // TODO: Save to database
+            // thông báo kết quả cho ZaloPay server
+            // return Ok(result);            
+            return Task.FromResult(new HandleZaloCallbackResponse(1, "success"));
+        } catch (Exception ex) {
+            // ZaloPay server sẽ callback lại (tối đa 3 lần)
+            return Task.FromResult(new HandleZaloCallbackResponse(0, ex.Message));
         }
     }
 }

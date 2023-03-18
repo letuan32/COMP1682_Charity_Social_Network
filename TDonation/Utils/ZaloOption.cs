@@ -6,4 +6,6 @@ public class ZaloPayOption
     public string Key1 { get; set; } = String.Empty;
     public string Key2 { get; set; } = String.Empty;
     public string CreateOrderUrl { get; set; } = String.Empty;
+    public string CallBackUrl { get; set; } = String.Empty;
+
 }

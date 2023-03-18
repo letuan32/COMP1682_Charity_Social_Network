@@ -7,8 +7,8 @@ import "google/protobuf/descriptor.proto";
 import "google/protobuf/field_mask.proto";
 // The greeting service definition.
 service Payment {
-  // Sends a greeting
   rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionReply);
+  rpc HandleZaloCallback (HandleZaloCallbackRequest) returns (HandleZaloCallbackReply);
 }
 
 // The request to make transaction
@@ -28,4 +28,15 @@ message CreateTransactionReply {
   string order_url = 1;
   string trans_token = 2;
   string message = 3;
+}
+
+message HandleZaloCallbackRequest{
+  string data = 1;
+  string mac = 2;
+  int32 type = 3;
+}
+
+message HandleZaloCallbackReply{
+  int32 return_code = 1;
+  string return_message = 2;
 }

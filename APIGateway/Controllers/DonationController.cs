@@ -32,7 +32,7 @@ public class DonationController : ControllerBase
 
     [HttpPost]
     [Route("zalo-callBack")]
-    public async Task<IActionResult> CallBack(ZaloCallbackCommand cbdata)
+    public async Task<IActionResult> CallBack(ZaloCallbackCommand request)
     {
         // var result = new Dictionary<string, object>();
         // string key2 = "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf";
@@ -67,6 +67,8 @@ public class DonationController : ControllerBase
 
         // thông báo kết quả cho ZaloPay server
         // return Ok(result); 
+
+        await _mediator.Send(request);
         throw new NotImplementedException();
 
     }

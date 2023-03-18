@@ -6,6 +6,7 @@ using APIGateway.Configs;
 using APIGateway.Helpers;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -69,8 +70,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add Rabbit
+builder.Services.AddMassTransit(x =>
+{
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
+    {
+        config.Host(new Uri("rabbitmq://localhost"), h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    }));
+});
+builder.Services.AddMassTransitHostedService();
 // Add grpc
-;
 var urls = builder.Configuration.GetSection("UrlConfig").Get<UrlConfig>();
 builder.Services.AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
 {

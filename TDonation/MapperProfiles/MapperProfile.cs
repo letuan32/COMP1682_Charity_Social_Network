@@ -30,5 +30,10 @@ public class MapperProfile : Profile
             .ForMember(d => d.TransactionToken, opt => opt.MapFrom(s => s.OrderToken))
             .ForMember(d => d.Message, opt => opt.MapFrom(s => s.ReturnMessage));
 
+        CreateMap<HandleZaloCallbackResponse, HandleZaloCallbackReply>()
+            .ForMember(d => d.ReturnMessage, opt => opt.MapFrom(s => s.ReturnMessage))
+            .ForMember(d => d.ReturnCode, opt => opt.MapFrom(s => s.ReturnCode));
+
+
     }
 }

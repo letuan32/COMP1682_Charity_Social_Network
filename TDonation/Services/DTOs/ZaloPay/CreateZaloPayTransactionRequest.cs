@@ -49,14 +49,14 @@ public class CreateZaloPayTransactionRequest
         _option = option;
         AppId = option.Appid;
         AppTime = long.Parse(ZaloPayHelper.Utils.GetTimeStamp().ToString());
-        AppTransId = DateTime.Now.ToString("yyMMdd") + "_" + "1239";
+        AppTransId = DateTime.Now.ToString("yyMMdd") + "_33333333333333333333" + Guid.NewGuid().ToString("N");
         AppUser = request.UserId;
         BankCode = GetBankCode(request.BankingType);
         EmbedData = GetEmbedData();
         Item = JsonConvert.SerializeObject(new List<string>());
         Amount = request.Amount;
         Description = request.Description;
-        CallbackUrl = request.CallbackUrl;
+        CallbackUrl = option.CallBackUrl;
         Mac = GenerateMac();
     }
 

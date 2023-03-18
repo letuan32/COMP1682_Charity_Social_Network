@@ -29,7 +29,7 @@ public class CreateDonationTransactionCommandHandler : IRequestHandler<CreateDon
 
     public async Task<CreateDonationTransactionResponse> Handle(CreateDonationTransactionCommand request, CancellationToken cancellationToken)
     {
-        var usreId = _userPropertyHelper.GetNameIdentifier() ?? "ADSADAEF";
+        var usreId = _userPropertyHelper.GetNameIdentifier() ?? "TestUser";
         
         var createTransactionGrpcRequest = await MapToGrpcRequest(request);
         
@@ -54,7 +54,7 @@ public class CreateDonationTransactionCommandHandler : IRequestHandler<CreateDon
             BankingType = (int)request.BankingType,
             PaymentService = (int)request.PaymentService,
             Description = bankingDescription.Description,
-            UserId = _userPropertyHelper.GetNameIdentifier() ?? "1312321",
+            UserId = _userPropertyHelper.GetNameIdentifier() ?? "1312321" //TODO: Get real user id
         };
     }
 }
