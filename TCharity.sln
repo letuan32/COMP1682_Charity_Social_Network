@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPostService", "TPostServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDonation", "TDonation\TDonation.csproj", "{A25FB6C4-BE8E-4916-AD22-BFABD57673A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{47B5FAFF-8F96-4164-9B00-7D13CAEC5F7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{A25FB6C4-BE8E-4916-AD22-BFABD57673A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A25FB6C4-BE8E-4916-AD22-BFABD57673A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A25FB6C4-BE8E-4916-AD22-BFABD57673A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B5FAFF-8F96-4164-9B00-7D13CAEC5F7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B5FAFF-8F96-4164-9B00-7D13CAEC5F7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B5FAFF-8F96-4164-9B00-7D13CAEC5F7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B5FAFF-8F96-4164-9B00-7D13CAEC5F7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
