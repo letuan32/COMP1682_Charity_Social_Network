@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TCharity.Post.Infrastructure.Configurations;
 using TPostService.Entities;
+using TPostService.Infrastructure.Configurations;
 
 namespace T_PostService.Infrastructure.Configurations;
 
@@ -15,14 +15,11 @@ public class PostEntityTypeConfiguration : BaseEntityTypeConfiguration<PostEntit
             .HasColumnName("content")
             .IsRequired();
 
-        builder.Property(e => e.ImagePaths)
-            .HasColumnName("image_urls")
-            .IsRequired(false);
-        
-        builder.Property(e => e.VideoPaths)
-            .HasColumnName("videos_urls")
+        builder.Property(e => e.MediaUrls)
+            .HasColumnName("media_urls")
             .IsRequired(false);
 
+        
         builder.HasMany<CommentEntity>(c => c.CommentsEntities)
             .WithOne(p => p.PostEntity)
             .HasForeignKey(c => c.PostId);

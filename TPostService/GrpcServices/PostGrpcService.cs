@@ -42,7 +42,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
 
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
-        _logger.LogInformation("Receive request");
+        _logger.LogInformation("Receive grpc GetPosts request. {Request}", request);
         var response = await _mediator.Send(new GetPostsQuery());
 
         if (response != null)
@@ -56,7 +56,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
 
     public override async Task<GetDonationBankingDescriptionReply> GetPostDonationBankingDescription(GetDonationBankingDescriptionRequest request, ServerCallContext context)
     {
-        _logger.LogInformation("Receive grpc request: GetDonationBankingDescriptionRequest ");
+        _logger.LogInformation("Receive grpc GetDonationBankingDescriptionRequest request. {Request} ", request);
         var response = await _mediator.Send(new GetPostBankingDescriptionQuery(request.PostId));
 
         if (response != null)

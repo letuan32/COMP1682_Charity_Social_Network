@@ -50,7 +50,6 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<GreeterService>();
 app.MapGrpcService<PostGrpcService>();
 
 app.MapGet("/",

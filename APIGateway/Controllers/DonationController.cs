@@ -1,7 +1,5 @@
 ﻿using APIGateway.CQRS.Commands;
-using APIGateway.Enums;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TDonation;
 
@@ -33,8 +31,8 @@ public class DonationController : ControllerBase
     }
 
     [HttpPost]
-    [Route("callBack")]
-    public async Task<IActionResult> CallBack(CallbackData cbdata)
+    [Route("zalo-callBack")]
+    public async Task<IActionResult> CallBack(ZaloCallbackCommand cbdata)
     {
         // var result = new Dictionary<string, object>();
         // string key2 = "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf";
@@ -71,14 +69,6 @@ public class DonationController : ControllerBase
         // return Ok(result); 
         throw new NotImplementedException();
 
-    }
-    
-    public class CallbackData {
-        public string data { get; set; }
-        public string mac { get; set; }
-        public int type { get; set; }
-        public Dictionary<string, object>? item { get; set; }
-        // add more properties as needed
     }
     
     public class BankDTO {
