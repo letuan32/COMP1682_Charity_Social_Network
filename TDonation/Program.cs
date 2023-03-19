@@ -74,7 +74,8 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 
 var app = builder.Build();
-
+app.UseAuthentication();
+app.UseAuthorization();
 // Configure the HTTP request pipeline.
 app.MapGrpcService<PaymentGrpcService>();
 

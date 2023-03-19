@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using TDonation.CQRS.ViewModels;
-using TDonation.Helpers;
-using TDonation.Services;
 using TDonation.Services.Interfaces;
 
 namespace TDonation.CQRS.Commands;
