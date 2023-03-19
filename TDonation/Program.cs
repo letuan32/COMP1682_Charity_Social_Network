@@ -1,6 +1,9 @@
 using System.Reflection;
+using System.Security.Claims;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using TDonation.Consumers;
 using TDonation.GrpcServices;
 using TDonation.MapperProfiles;
@@ -15,6 +18,22 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .Build();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = configuration["Jwt:Firebase:ValidIssuer"];
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            RoleClaimType = ClaimTypes.Role,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Firebase:ValidIssuer"],
+            ValidAudience = configuration["Jwt:Firebase:ValidAudience"],
+        };
+    });
+builder.Services.AddAuthorization();
 // Add Rabbit
 builder.Services.AddMassTransit(x =>
 {

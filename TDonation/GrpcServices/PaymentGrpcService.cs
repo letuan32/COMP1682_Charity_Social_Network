@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using TDonation.CQRS.Commands;
 
 namespace TDonation.GrpcServices;

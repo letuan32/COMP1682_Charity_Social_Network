@@ -1,6 +1,11 @@
 using System.Reflection;
+using System.Security.Claims;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TPostService.GrpcServices;
 using TPostService.Heplers;
 using TPostService.Infrastructure;
@@ -15,13 +20,37 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .Build();
 
+var filePath = Path.Combine(builder.Environment.ContentRootPath, "firebase-credentials.json");
+FirebaseApp.Create(new AppOptions
+{
+    Credential = GoogleCredential.FromFile(filePath)
+});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = configuration["Jwt:Firebase:ValidIssuer"];
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            RoleClaimType = ClaimTypes.Role,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Firebase:ValidIssuer"],
+            ValidAudience = configuration["Jwt:Firebase:ValidAudience"],
+        };
+    });
+builder.Services.AddAuthorization();
 
 builder.Services.AddLogging();
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
 // Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    // options.Interceptors.Add<GrpcInterceptor>();
+});
 builder.Services.AddGrpcReflection();
 
 
@@ -44,6 +73,8 @@ builder.Services.AddTransient<UserPropertyHelper>();
 
 
 var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
 if (app.Environment.IsDevelopment())
 {
     app.MapGrpcReflectionService();

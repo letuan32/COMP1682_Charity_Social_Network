@@ -3,15 +3,21 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using APIGateway.AutoMapper;
 using APIGateway.Configs;
+using APIGateway.Extensions;
 using APIGateway.Helpers;
+using APIGateway.Services;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Grpc.AspNetCore.Server;
+using Grpc.Core.Interceptors;
+using Grpc.Net.Client;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TDonation;
 using TPostService;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -85,18 +91,25 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddMassTransitHostedService();
 // Add grpc
 var urls = builder.Configuration.GetSection("UrlConfig").Get<UrlConfig>();
-builder.Services.AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
-{
-    options.Address = new Uri(urls.PostGrpc);
-    options.ChannelOptionsActions.Add(channelOptions =>
+// builder.Services.AddSingleton<GrpcInterceptor>();
+builder.Services
+    .AddGrpcClient<PostGrpc.PostGrpcClient>(options =>
     {
-        channelOptions.HttpHandler = new HttpClientHandler
+        options.Address = new Uri(urls.PostGrpc);
+        options.ChannelOptionsActions.Add(channelOptions =>
         {
-            SslProtocols = SslProtocols.None,
-            // ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-        };
+            channelOptions.HttpHandler = new HttpClientHandler
+            {
+                SslProtocols = SslProtocols.None
+                // ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+        });
+    }).AddCallCredentials(async (context, metadata, serviceProvider) =>
+    {
+        var provider = serviceProvider.GetRequiredService<ITokenService>();
+        var token = await provider.AcquireToken();
+        metadata.Add("Authorization", $"{token}");
     });
-});
 
 builder.Services.AddGrpcClient<Payment.PaymentClient>(options =>
 {
@@ -105,31 +118,25 @@ builder.Services.AddGrpcClient<Payment.PaymentClient>(options =>
     {
         channelOptions.HttpHandler = new HttpClientHandler
         {
-            SslProtocols = SslProtocols.None,
+            SslProtocols = SslProtocols.None
             // ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
     });
+}).AddCallCredentials(async (context, metadata, serviceProvider) =>
+{
+    var provider = serviceProvider.GetRequiredService<ITokenService>();
+    var token = await provider.AcquireToken();
+    metadata.Add("Authorization", $"Bearer {token}");
 });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UserPropertyHelper>();
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-// builder.Services.AddAuthorization(options =>
-// {
-//     // This is a default authorization policy which requires authentication
-//     options.AddPolicy("admin", policy =>
-//     {
-//         policy.RequireAuthenticatedUser().RequireClaim(ClaimTypes.Role,"admin");
-//     });
-//     options.AddPolicy("user", policy =>
-//     {
-//         policy.RequireAuthenticatedUser().RequireClaim(ClaimTypes.Role,"user");;
-//     });
-// });
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

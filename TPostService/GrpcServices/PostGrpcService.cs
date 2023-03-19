@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Grpc.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using T_PostService;
 using TPostService.Queries;
@@ -30,7 +31,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
     {
         _logger.LogInformation("Receive request get post detail. Id = {id}", request.Id);
         var response = await _mediator.Send(new GetPostDetailQuery() { PostId = request.Id });
-            
+        
         if (response != null)
         {
             return _mapper.Map<PostReply>(response);
@@ -54,6 +55,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
         return null;
     }
 
+    [Authorize]
     public override async Task<GetDonationBankingDescriptionReply> GetPostDonationBankingDescription(GetDonationBankingDescriptionRequest request, ServerCallContext context)
     {
         _logger.LogInformation("Receive grpc GetDonationBankingDescriptionRequest request. {Request} ", request);
