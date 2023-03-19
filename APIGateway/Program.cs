@@ -106,7 +106,7 @@ builder.Services
         });
     }).AddCallCredentials(async (context, metadata, serviceProvider) =>
     {
-        var provider = serviceProvider.GetRequiredService<ITokenService>();
+        var provider = serviceProvider.GetRequiredService<IUserService>();
         var token = await provider.AcquireToken();
         metadata.Add("Authorization", $"{token}");
     });
@@ -124,14 +124,14 @@ builder.Services.AddGrpcClient<Payment.PaymentClient>(options =>
     });
 }).AddCallCredentials(async (context, metadata, serviceProvider) =>
 {
-    var provider = serviceProvider.GetRequiredService<ITokenService>();
+    var provider = serviceProvider.GetRequiredService<IUserService>();
     var token = await provider.AcquireToken();
     metadata.Add("Authorization", $"Bearer {token}");
 });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UserPropertyHelper>();
 builder.Services.AddAutoMapper(typeof(MapperProfile));

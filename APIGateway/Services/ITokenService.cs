@@ -1,6 +1,6 @@
 ﻿namespace APIGateway.Services;
 
-public interface ITokenService
+public interface IUserService
 {
     Task<string?> AcquireToken();
 }

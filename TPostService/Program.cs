@@ -61,6 +61,7 @@ builder.Services.AddAutoMapper(typeof(PostMapperProfile));
 
 // Add services to the container.s
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<PostContext>(opt =>

@@ -17,12 +17,15 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
     private readonly ILogger<PostGrpcService> _logger;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
+
 
     
-    public PostGrpcService(ILogger<PostGrpcService> logger, IMapper mapper, IMediator mediator)
+    public PostGrpcService(ILogger<PostGrpcService> logger, IMapper mapper, IMediator mediator, IUserService userService)
     {
         _mapper = mapper;
         _mediator = mediator;
+        _userService = userService;
         _logger = logger;
     }
 
@@ -58,6 +61,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
     [Authorize]
     public override async Task<GetDonationBankingDescriptionReply> GetPostDonationBankingDescription(GetDonationBankingDescriptionRequest request, ServerCallContext context)
     {
+        var user = await _userService.GetUserId();
         _logger.LogInformation("Receive grpc GetDonationBankingDescriptionRequest request. {Request} ", request);
         var response = await _mediator.Send(new GetPostBankingDescriptionQuery(request.PostId));
 

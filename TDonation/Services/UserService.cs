@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Newtonsoft.Json;
+﻿using TDonation.Services.Interfaces;
 
-namespace APIGateway.Services;
+namespace TDonation.Services;
 
 public class UserService : IUserService
 {
@@ -17,5 +16,15 @@ public class UserService : IUserService
         // var json = JsonConvert.SerializeObject(_contextAccessor.HttpContext);
         var a = _contextAccessor.HttpContext?.Request?.Headers["Authorization"];
         return a;
+    }
+
+    public async Task<string> GetUserId()
+    {
+        return _contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "user_id")?.Value ?? "Anonymous";
+    }
+
+    public Task<string?> GetUserEmail()
+    {
+        throw new NotImplementedException();
     }
 }

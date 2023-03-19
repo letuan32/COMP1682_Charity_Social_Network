@@ -66,6 +66,7 @@ builder.Services.Configure<ZaloPayOption>(configuration.GetSection("ZaloPay"));
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 // Add Service
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 
 // Add MediatR
