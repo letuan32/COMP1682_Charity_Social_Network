@@ -18,4 +18,9 @@ public class UserService : IUserService
         var a = _contextAccessor.HttpContext?.Request?.Headers["Authorization"];
         return a;
     }
+
+    public string GetUserIdAsync()
+    {
+        return _contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "user_id")?.Value ?? "Anonymous";
+    }
 }

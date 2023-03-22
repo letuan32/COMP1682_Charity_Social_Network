@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using APIGateway.DTOs.Donations;
 using APIGateway.Helpers;
+using APIGateway.Services;
 using AutoMapper;
 using MediatR;
 using TDonation;
@@ -15,22 +16,20 @@ public class CreateDonationTransactionCommandHandler : IRequestHandler<CreateDon
 
     private readonly ILogger<CreateDonationTransactionCommandHandler> _logger;
     private readonly IMapper _mapper;
-    private readonly UserPropertyHelper _userPropertyHelper;
+    private readonly IUserService _userService ;
 
     
-    public CreateDonationTransactionCommandHandler(ILogger<CreateDonationTransactionCommandHandler> logger, IMapper mapper, PostGrpc.PostGrpcClient postGrpcClient, Payment.PaymentClient paymentGrpcClient, UserPropertyHelper userPropertyHelper)
+    public CreateDonationTransactionCommandHandler(ILogger<CreateDonationTransactionCommandHandler> logger, IMapper mapper, PostGrpc.PostGrpcClient postGrpcClient, Payment.PaymentClient paymentGrpcClient, IUserService userService)
     {
         _logger = logger;
         _mapper = mapper;
         _postGrpcClient = postGrpcClient;
         _paymentGrpcClient = paymentGrpcClient;
-        _userPropertyHelper = userPropertyHelper;
+        _userService = userService;
     }
 
     public async Task<CreateDonationTransactionResponse> Handle(CreateDonationTransactionCommand request, CancellationToken cancellationToken)
     {
-        var usreId = _userPropertyHelper.GetNameIdentifier() ?? "TestUser";
-        
         var createTransactionGrpcRequest = await MapToGrpcRequest(request);
         
         _logger.LogInformation("Start gRPC request to create transaction. gRPC Servier: {GrpcServer}", _paymentGrpcClient.GetType());
@@ -40,12 +39,13 @@ public class CreateDonationTransactionCommandHandler : IRequestHandler<CreateDon
 
     private async Task<CreateTransactionRequest> MapToGrpcRequest(CreateDonationTransactionCommand request)
     {
-        _logger.LogInformation("Start gRPC request to get banking description. gRPC Servier: {GrpcServer}", _postGrpcClient.GetType());
-        var bankingDescription =
-            await _postGrpcClient.GetPostDonationBankingDescriptionAsync(new GetDonationBankingDescriptionRequest()
-                { PostId = request.PostId });
+        // TODO: Pending implement transaction desciption
+        // _logger.LogInformation("Start gRPC request to get banking description. gRPC Servier: {GrpcServer}", _postGrpcClient.GetType());
+        // var bankingDescription =
+        //     await _postGrpcClient.GetPostDonationBankingDescriptionAsync(new GetDonationBankingDescriptionRequest()
+        //         { PostId = request.PostId });
 
-        if (bankingDescription == null) throw new BadHttpRequestException("Post not found");
+        // if (bankingDescription == null) throw new BadHttpRequestException("Post not found");
 
         return new CreateTransactionRequest()
         {
@@ -53,8 +53,8 @@ public class CreateDonationTransactionCommandHandler : IRequestHandler<CreateDon
             Amount = request.Amount,
             BankingType = (int)request.BankingType,
             PaymentService = (int)request.PaymentService,
-            Description = bankingDescription.Description,
-            UserId = _userPropertyHelper.GetNameIdentifier() ?? "1312321" //TODO: Get real user id
+            Description = "Donation",
+            UserId = _userService.GetUserIdAsync() ?? "1312321" //TODO: Get real user id
         };
     }
 }

@@ -16,7 +16,9 @@ public class DonationDbContext : DbContext
         _userService = userService;
         _userId = _userService.GetUserId().GetAwaiter().GetResult();;
     }
-   
+    
+    public DbSet<DonationTransactionEntity> DonationTransactionEntities { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("donation_service_db");

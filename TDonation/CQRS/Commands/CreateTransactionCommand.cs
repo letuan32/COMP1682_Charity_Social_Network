@@ -15,6 +15,7 @@ public class CreateTransactionCommand : IRequest<CreateTransactionResponse>
     public BankingType BankingType { get; set; }
     public int PostId { get; set; }
 
+    public string InternalTransactionId { get; } = DateTime.Now.ToString("yyMMdd") + "_" + Guid.NewGuid().ToString("N");
 }
 
 public enum PaymentServiceEnum

@@ -45,6 +45,7 @@
 
     <ItemGroup>
       <Folder Include="Infracstructure\Configurations" />
+      <Folder Include="Services\DTOs\Donations" />
     </ItemGroup>
 
 </Project>

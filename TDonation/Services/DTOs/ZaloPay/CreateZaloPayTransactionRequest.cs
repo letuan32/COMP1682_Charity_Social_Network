@@ -49,7 +49,7 @@ public class CreateZaloPayTransactionRequest
         _option = option;
         AppId = option.Appid;
         AppTime = long.Parse(ZaloPayHelper.Utils.GetTimeStamp().ToString());
-        AppTransId = DateTime.Now.ToString("yyMMdd") + "_" + Guid.NewGuid().ToString("N");
+        AppTransId = DateTime.Now.ToString("yyMMdd") + "_" + request.InternalTransactionId;
         AppUser = request.UserId;
         BankCode = GetBankCode(request.BankingType);
         EmbedData = GetEmbedData();

@@ -51,7 +51,6 @@ public class ZaloPayService : IZaloPayService
     public Task<HandleZaloCallbackResponse> HandZaloCallbackAsync(HandleZaloCallbackCommand request,
         CancellationToken cancellationToken)
     {
-        
         try {
             var mac = HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, _zaloPayOption.Key2, request.Data);
 
