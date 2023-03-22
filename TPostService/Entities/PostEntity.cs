@@ -15,5 +15,6 @@ public class PostEntity : BaseIdEntity<int>, IBaseEntity
     public bool IsDeleted { get; set; }
     public int Donations { get; set; }
     public int Views { get; set; }
+    public decimal ExpectedAmount { get; set; }
     public virtual ICollection<CommentEntity> CommentsEntities { get; set; }
 }
