@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TDonation.Entities;
+using TDonation.Enums;
 using TDonation.Infracstructure;
 using TDonation.Services.Interfaces;
 
@@ -8,14 +9,17 @@ namespace TDonation.Services;
 public class DonationService : IDonationService
 {
     private readonly DonationDbContext _dbContext;
+    private readonly IUserService _userService;
 
-    public DonationService(DonationDbContext dbContext)
+    public DonationService(DonationDbContext dbContext, IUserService userService)
     {
         _dbContext = dbContext;
+        _userService = userService;
     }
 
     public async Task<bool> CreateTransactionAsync(DonationTransactionEntity entity)
     {
+        var user = _userService.GetUserId();
         await _dbContext.DonationTransactionEntities.AddAsync(entity);
         var result = await _dbContext.SaveChangesAsync();
         return result > 0;
@@ -28,7 +32,7 @@ public class DonationService : IDonationService
                 _.InternalTransactionId == internalTransactionId);
 
         if (transaction is null) return false;
-        transaction.Status = statusEnum;
+        transaction.StatusEnum = statusEnum;
         var result = await _dbContext.SaveChangesAsync();
         return result > 0;
     }

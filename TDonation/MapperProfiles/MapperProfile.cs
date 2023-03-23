@@ -26,13 +26,20 @@ public class MapperProfile : Profile
 
 
         CreateMap<CreateZaloTransactionResponse, CreateTransactionResponse>()
-            .ForMember(d => d.PaymentGatewayUrl, opt => opt.MapFrom(s => s.OrderUrl))
-            .ForMember(d => d.TransactionToken, opt => opt.MapFrom(s => s.OrderToken))
-            .ForMember(d => d.Message, opt => opt.MapFrom(s => s.ReturnMessage));
-
+            .ConstructUsing(_ => new CreateTransactionResponse(_.OrderUrl, _.OrderToken, _.ReturnMessage));
         CreateMap<HandleZaloCallbackResponse, HandleZaloCallbackReply>()
             .ForMember(d => d.ReturnMessage, opt => opt.MapFrom(s => s.ReturnMessage))
             .ForMember(d => d.ReturnCode, opt => opt.MapFrom(s => s.ReturnCode));
+
+        CreateMap<HandleZaloCallbackRequest, HandleZaloCallbackCommand>()
+            .ForMember(d => d.Mac, opt => opt.MapFrom(s => s.Mac))
+            .ForMember(d => d.Data, opt => opt.MapFrom(s => s.Data))
+            .ForMember(d => d.Type, opt => opt.MapFrom(s => s.Type));
+        
+        // Create mappings for HandleZaloCallbackCommand and HandleZaloCallbackResponse
+        
+        
+
 
 
     }

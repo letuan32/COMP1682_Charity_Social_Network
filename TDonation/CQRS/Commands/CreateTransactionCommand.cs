@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using TDonation.CQRS.ViewModels;
+using TDonation.Enums;
 
 namespace TDonation.CQRS.Commands;
 
@@ -12,21 +13,8 @@ public class CreateTransactionCommand : IRequest<CreateTransactionResponse>
     public long Amount { get; set; }
     public string Description { get; set; } = String.Empty;
     public string? CallbackUrl { get; set; }
-    public BankingType BankingType { get; set; }
+    public BankingTypeEnum BankingType { get; set; }
     public int PostId { get; set; }
 
     public string InternalTransactionId { get; } = DateTime.Now.ToString("yyMMdd") + "_" + Guid.NewGuid().ToString("N");
 }
-
-public enum PaymentServiceEnum
-{
-    ZaloPay = 1
-}
-
-public enum BankingType
-{
-    ATM = 1,
-    Visa = 2,
-    EWallet=3
-}
-

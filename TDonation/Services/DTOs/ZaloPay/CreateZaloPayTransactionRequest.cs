@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using TDonation.CQRS.Commands;
+using TDonation.Enums;
 using TDonation.Services.ZaloPayHelper.Crypto;
 using TDonation.Utils;
 
@@ -49,7 +50,7 @@ public class CreateZaloPayTransactionRequest
         _option = option;
         AppId = option.Appid;
         AppTime = long.Parse(ZaloPayHelper.Utils.GetTimeStamp().ToString());
-        AppTransId = DateTime.Now.ToString("yyMMdd") + "_" + request.InternalTransactionId;
+        AppTransId = request.InternalTransactionId;
         AppUser = request.UserId;
         BankCode = GetBankCode(request.BankingType);
         EmbedData = GetEmbedData();
@@ -69,15 +70,15 @@ public class CreateZaloPayTransactionRequest
                 p => p.GetValue(this)?.ToString() ?? string.Empty);
     }
 
-    private string GetBankCode(BankingType bankingType)
+    private string GetBankCode(BankingTypeEnum bankingType)
     {
         switch (bankingType)
         {
-            case BankingType.ATM:
+            case BankingTypeEnum.ATM:
                 return string.Empty;
-            case BankingType.Visa:
+            case BankingTypeEnum.Visa:
                 return "CC";
-            case BankingType.EWallet:
+            case BankingTypeEnum.EWallet:
                 return "zalopayapp";
             default: return string.Empty;
         }

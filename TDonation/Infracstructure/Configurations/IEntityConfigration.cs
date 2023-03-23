@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace TPostService.Infrastructure.Configurations;
+namespace TDonation.Infracstructure.Configurations;
 
 public interface IEntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : class
 {

@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using TDonation.Entities;
+using TDonation.Infracstructure.Configurations;
 using TDonation.Services.Interfaces;
 
 namespace TDonation.Infracstructure;
@@ -21,6 +22,7 @@ public class DonationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new DonationTransactionEntityConfiguration());
         modelBuilder.HasDefaultSchema("donation_service_db");
     }
 
@@ -39,6 +41,7 @@ public class DonationDbContext : DbContext
                         entity.CreatedDate = now;
                         entity.UpdatedDate = now;
                         entity.CreatedBy = _userId;
+                        entity.UpdatedBy = _userId;
                         break;
                     case EntityState.Modified:
                         Entry(entity).Property(x => x.CreatedDate).IsModified = false;

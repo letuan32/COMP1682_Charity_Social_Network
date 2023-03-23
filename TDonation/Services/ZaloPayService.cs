@@ -53,20 +53,12 @@ public class ZaloPayService : IZaloPayService
     {
         try {
             var mac = HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, _zaloPayOption.Key2, request.Data);
-
-            // kiểm tra callback hợp lệ (đến từ ZaloPay server)
             if (!request.Mac.Equals(mac)) {
                 // callback không hợp lệ
                 return Task.FromResult(new HandleZaloCallbackResponse(-1, "mac not equal"));
             }
-
-            // thanh toán thành công
-            // merchant cập nhật trạng thái cho đơn hàng
             var data = request.ParsedData;
-
-            // TODO: Save to database
-            // thông báo kết quả cho ZaloPay server
-            // return Ok(result);            
+            
             return Task.FromResult(new HandleZaloCallbackResponse(1, "success"));
         } catch (Exception ex) {
             // ZaloPay server sẽ callback lại (tối đa 3 lần)

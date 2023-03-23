@@ -3,9 +3,11 @@ using System.Security.Claims;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TDonation.Consumers;
 using TDonation.GrpcServices;
+using TDonation.Infracstructure;
 using TDonation.MapperProfiles;
 using TDonation.Services;
 using TDonation.Services.Interfaces;
@@ -66,8 +68,15 @@ builder.Services.Configure<ZaloPayOption>(configuration.GetSection("ZaloPay"));
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 // Add Service
+
+builder.Services.AddDbContext<DonationDbContext>(opt =>
+    opt.UseNpgsql(configuration.GetConnectionString("Default")));
+
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
+builder.Services.AddScoped<IDonationService, DonationService>();
+
 
 // Add MediatR
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());

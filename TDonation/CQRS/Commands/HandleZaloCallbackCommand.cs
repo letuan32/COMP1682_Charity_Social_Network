@@ -13,7 +13,7 @@ public class HandleZaloCallbackCommand : IRequest<HandleZaloCallbackResponse>
     
     public int Type { get; set; }
     
-    public ZaloPayCallbackData ParsedData => JsonConvert.DeserializeObject<ZaloPayCallbackData>(Data);
+    public ZaloPayCallbackData ParsedData  => JsonConvert.DeserializeObject<ZaloPayCallbackData>(Data);
 }
 
 
@@ -35,10 +35,10 @@ public class ZaloPayCallbackData
     public int Amount { get; set; }
     
     [JsonPropertyName("embed_data")]
-    public string EmbedData { get; set; }
+    public string? EmbedData { get; set; }
     
     [JsonPropertyName("item")]
-    public List<ZaloPayCallbackDataItem> Item { get; set; }
+    public string? Item { get; set; }
     
     [JsonPropertyName("zp_trans_id")]
     public long ZpTransId { get; set; }
@@ -59,17 +59,3 @@ public class ZaloPayCallbackData
     public int DiscountAmount { get; set; }
 }
 
-public class ZaloPayCallbackDataItem
-{
-    [JsonPropertyName("itemid")]
-    public string ItemId { get; set; }
-    
-    [JsonPropertyName("itemname")]
-    public string ItemName { get; set; }
-    
-    [JsonPropertyName("itemprice")]
-    public int ItemPrice { get; set; }
-    
-    [JsonPropertyName("itemquantity")]
-    public int ItemQuantity { get; set; }
-}

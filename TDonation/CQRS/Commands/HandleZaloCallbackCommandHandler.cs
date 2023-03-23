@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using TDonation.CQRS.ViewModels;
 using TDonation.Entities;
+using TDonation.Enums;
 using TDonation.Services;
 using TDonation.Services.Interfaces;
 
