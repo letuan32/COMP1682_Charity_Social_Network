@@ -1,5 +1,7 @@
 
 
+using APIGateway.CQRS.Commands.PostCommands;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TPostService;
 
@@ -10,12 +12,14 @@ namespace APIGateway.Controllers;
 public class PostController : ControllerBase
 {
     private readonly PostGrpc.PostGrpcClient _client;
-    private readonly ILogger<WeatherController> _logger;
+    private readonly ILogger<PostController> _logger;
+    private readonly IMapper _mapper;
 
-    public PostController(ILogger<WeatherController> logger, PostGrpc.PostGrpcClient client)
+    public PostController(ILogger<PostController> logger, PostGrpc.PostGrpcClient client, IMapper mapper)
     {
         _logger = logger;
         _client = client;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -23,6 +27,16 @@ public class PostController : ControllerBase
     {
         var response = await _client.GetPostsAsync(new GetPostsRequest());
         return Ok(response);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreatePostsAsync(CreatePostCommand request)
+    {
+        _logger.LogInformation("Start sending gRPC request to create post. Request: {@request}", request);
+        var response = await _client.CreatePostAsync(_mapper.Map<CreatePostRequest>(request));
+        if(response.Success)
+            return Ok(response);
+        return BadRequest(response);
     }
     
     [HttpGet]

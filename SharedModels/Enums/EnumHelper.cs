@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-namespace TDonation.Enums;
+namespace SharedModels.Enums;
 
 public static class EnumHelper
 {

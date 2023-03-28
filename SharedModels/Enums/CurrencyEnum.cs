@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace TDonation.Enums;
+namespace SharedModels.Enums;
 
 public enum CurrencyEnum
 {

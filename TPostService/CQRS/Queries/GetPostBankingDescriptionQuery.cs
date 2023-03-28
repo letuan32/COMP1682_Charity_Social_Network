@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TPostService.ViewModels;
 
-namespace TPostService.Queries;
+namespace TPostService.CQRS.Queries;
 
 public class GetPostBankingDescriptionQuery : IRequest<PostBakingDescriptionViewModel?>
 {

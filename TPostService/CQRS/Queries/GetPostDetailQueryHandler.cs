@@ -2,7 +2,7 @@
 using TPostService.Services;
 using TPostService.ViewModels;
 
-namespace TPostService.Queries;
+namespace TPostService.CQRS.Queries;
 
 public class GetPostDetailQueryHandler : IRequestHandler<GetPostDetailQuery, PostViewModel?>
 {

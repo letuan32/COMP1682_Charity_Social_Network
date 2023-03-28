@@ -59,12 +59,13 @@ builder.Services.AddAutoMapper(typeof(PostMapperProfile));
 
 
 
-// Add services to the container.s
+// Add services to the container
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFirebaseService, FirebaseService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddDbContext<PostContext>(opt =>
+builder.Services.AddDbContext<PostDbContext>(opt =>
     opt.UseNpgsql(configuration.GetConnectionString("Default")));
 
 

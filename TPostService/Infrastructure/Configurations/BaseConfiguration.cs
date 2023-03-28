@@ -10,8 +10,8 @@ public abstract class BaseEntityTypeConfiguration<TEntity> : IEntityConfiguratio
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(e => e.Id).HasName("id");
-        builder.Property(e => e.CreatedDate).HasColumnName("created_date");
-        builder.Property(e => e.UpdatedDate).HasColumnName("updated_date");
+        builder.Property(e => e.CreatedDate).HasColumnName("created_date").HasColumnType("timestamp with time zone");
+        builder.Property(e => e.UpdatedDate).HasColumnName("updated_date").HasColumnType("timestamp with time zone");
         builder.Property(e => e.CreatedBy).HasColumnName("created_by");
         builder.Property(e => e.UpdatedBy).HasColumnName("updated_by");
         builder.Property(e => e.IsDeleted).HasColumnName("is_deleted");

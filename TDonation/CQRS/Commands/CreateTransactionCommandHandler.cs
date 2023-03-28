@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SharedModels.Enums;
 using TDonation.CQRS.ViewModels;
 using TDonation.Entities;
 using TDonation.Enums;

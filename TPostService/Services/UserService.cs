@@ -16,7 +16,7 @@ public class UserService : IUserService
         return a;
     }
 
-    public async Task<string> GetUserId()
+    public string GetUserId()
     {
         return _contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "user_id")?.Value ?? "Anonymous";
     }

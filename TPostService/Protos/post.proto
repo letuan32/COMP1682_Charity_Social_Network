@@ -12,6 +12,8 @@ service PostGrpc {
   rpc GetPostById (GetPostByIdRequest) returns (PostReply);
   rpc GetPosts(GetPostsRequest) returns (GetPostsReply);
   rpc GetPostDonationBankingDescription(GetDonationBankingDescriptionRequest) returns (GetDonationBankingDescriptionReply);
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  
 }
 
 
@@ -69,4 +71,19 @@ message GetDonationBankingDescriptionRequest{
 message GetDonationBankingDescriptionReply{
   int32 postId = 1;
   string description = 2;
+}
+
+message CreatePostRequest {
+  string content = 1;
+  string location = 2;
+  repeated string media_urls = 3;
+  repeated string document_urls = 4;
+  int64 expected_amount = 5;
+  google.protobuf.Timestamp expected_received_date = 6;
+  int32 post_category_enum = 7;
+  int32 currency_enum = 8;
+}
+
+message CreatePostResponse {
+  bool success = 1;
 }

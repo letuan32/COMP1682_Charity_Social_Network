@@ -1,4 +1,5 @@
-﻿using TDonation.CQRS.Commands;
+﻿using SharedModels.Enums;
+using TDonation.CQRS.Commands;
 using TDonation.Enums;
 
 namespace TDonation.Entities;

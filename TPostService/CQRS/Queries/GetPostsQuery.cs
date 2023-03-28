@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
 using TPostService.ViewModels;
 
-namespace TPostService.Queries;
+namespace TPostService.CQRS.Queries;
 
 public class GetPostsQuery : IRequest<IList<PostViewModel>?>
 {
