@@ -2,6 +2,7 @@
 using FirebaseAdmin.Auth;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using SharedModels.Enums;
 using TPostService.CQRS.Commands;
 using TPostService.Entities;
 using TPostService.ViewModels;
@@ -22,6 +23,7 @@ public class PostMapperProfile : Profile
         CreateMap<PostViewModel, PostReply>()
             .ForMember(d => d.Author, opt => opt.MapFrom(s => s.Author))
             .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => Timestamp.FromDateTime(s.CreatedAt.ToUniversalTime())))
+            .ForMember(d => d.ExpectedReceivedDate, opt => opt.MapFrom(s => Timestamp.FromDateTime(s.ExpectedReceivedDate.ToUniversalTime())))
             .ReverseMap();
         CreateMap<IList<PostViewModel>, GetPostsReply>()
             .ForMember(d => d.Posts, 
@@ -37,10 +39,14 @@ public class PostMapperProfile : Profile
             .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
             .ForMember(d => d.Content, opt => opt.MapFrom(s => s.Content))
             .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.CreatedDate))
+            .ForMember(d => d.CreatedById, opt => opt.MapFrom(s => s.CreatedBy))
             .ForMember(d => d.MediaUrls, opt => opt.MapFrom(s => s.MediaUrls))
             .ForMember(d => d.DocumentUrls, opt => opt.MapFrom(s => s.DocumentUrls))
             .ForMember(d => d.Location, opt => opt.MapFrom(s => s.Location))
             .ForMember(d => d.ExpectedAmount, opt => opt.MapFrom(s => s.ExpectedAmount))
+            .ForMember(d => d.ExpectedReceivedDate, opt => opt.MapFrom(s => s.ExpectedReceivedDate))
+            .ForMember(d => d.Views, opt => opt.MapFrom(s => s.Views))
+            .ForMember(d => d.Currency, opt => opt.MapFrom(s => s.CurrencyEnum.GetDescription()))
             .ForMember(d => d.NumberOfDonation, opt => opt.MapFrom(s => s.Donations))
             .ForMember(d => d.NumberOfComment,
                 opt => opt.MapFrom(s => s.CommentsEntities.Any() ? s.CommentsEntities.Count : 0));

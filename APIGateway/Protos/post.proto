@@ -34,6 +34,11 @@ message PostReply {
   google.protobuf.Timestamp CreatedAt = 9;
   int32 Likes = 10;
   string BankingDescription = 11;
+  google.protobuf.Timestamp expectedReceivedDate = 12;
+  int32 views = 13;
+  int64 expectedAmount = 14;
+  string currency = 15;
+  
 }
 
 message GetPostsRequest{
@@ -56,6 +61,11 @@ message PostItemReply{
   google.protobuf.Timestamp CreatedAt = 9;
   int32 Likes = 10;
   string BankingDescription = 11;
+  string expectedReceivedDate = 12;
+  int32 views = 13;
+  int64 expectedAmount = 14;
+  string currency = 15;
+
 }
 
 message PostAuthorReply{
