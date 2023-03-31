@@ -25,7 +25,7 @@ public class HandleZaloCallbackCommandHandler : IRequestHandler<HandleZaloCallba
         if (handleResult.ReturnCode == 1)
         {
             await _donationService.UpdateTransactionStatusAsync(request.ParsedData.AppTransId,
-                TransactionStatusEnum.Done);
+                TransactionStatusEnum.Success);
         }
         else
         {

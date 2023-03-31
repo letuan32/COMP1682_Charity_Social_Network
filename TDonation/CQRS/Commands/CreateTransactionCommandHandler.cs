@@ -20,27 +20,35 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         _donationService = donationService;
     }
 
-    public async Task<CreateTransactionResponse> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
+    public async Task<CreateTransactionResponse> Handle(CreateTransactionCommand request,
+        CancellationToken cancellationToken)
     {
         var createTransactionResponse = request.PaymentServiceEnum switch
         {
             PaymentServiceEnum.ZaloPay => await _zaloPayService.CreateTransactionAsync(request),
+            PaymentServiceEnum.Paypal => new CreateTransactionResponse(string.Empty, request.InternalTransactionId, string.Empty),
             _ => throw new NotImplementedException()
         };
 
-        if (string.IsNullOrEmpty(createTransactionResponse.PaymentGatewayUrl)) return createTransactionResponse;
+        if (request.PaymentServiceEnum == PaymentServiceEnum.ZaloPay)
+        {
+            if (string.IsNullOrEmpty(createTransactionResponse.PaymentGatewayUrl)) return createTransactionResponse;
 
-        var donationTransactionEntity = new DonationTransactionEntity(request.PostId,
-            request.Amount, request.UserId, "", request.InternalTransactionId,
-            TransactionTypeEnum.Donation, CurrencyEnum.VND, PaymentServiceEnum.ZaloPay, request.Description,
-            TransactionStatusEnum.InProcess, null,
-            createTransactionResponse.TransactionToken ?? createTransactionResponse.PaymentGatewayUrl);
+            var donationTransactionEntity = new DonationTransactionEntity(request.PostId,
+                request.Amount, request.UserId, "", request.InternalTransactionId,
+                TransactionTypeEnum.Donation, CurrencyEnum.VND, PaymentServiceEnum.ZaloPay, request.Description,
+                TransactionStatusEnum.InProcess, null,
+                createTransactionResponse.TransactionToken ?? createTransactionResponse.PaymentGatewayUrl);
 
-        var createInternalTransactionRecordResult = await _donationService.CreateTransactionAsync(donationTransactionEntity);
-        return !createInternalTransactionRecordResult ? 
-            new CreateTransactionResponse(null, null, "Failure to create transaction") 
-            : createTransactionResponse;
+            var createInternalTransactionRecordResult =
+                await _donationService.CreateTransactionAsync(donationTransactionEntity);
+            return !createInternalTransactionRecordResult
+                ? new CreateTransactionResponse(string.Empty, string.Empty, "Failure to create transaction")
+                : createTransactionResponse;
+        }
+
+        return createTransactionResponse;
     }
-    
+
 
 }

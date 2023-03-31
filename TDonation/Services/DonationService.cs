@@ -17,12 +17,22 @@ public class DonationService : IDonationService
         _userService = userService;
     }
 
+    public async Task<bool> AnyAsync(string internalTransactionId)
+    {
+        return await _dbContext.DonationTransactionEntities.AnyAsync(d =>
+            d.InternalTransactionId == internalTransactionId);
+    }
+
     public async Task<bool> CreateTransactionAsync(DonationTransactionEntity entity)
     {
-        var user = _userService.GetUserId();
         await _dbContext.DonationTransactionEntities.AddAsync(entity);
         var result = await _dbContext.SaveChangesAsync();
         return result > 0;
+    }
+
+    public Task<DonationTransactionEntity?> GetPaypalTransactionByInvoiceIdAsync(string invoiceId)
+    {
+        return _dbContext.DonationTransactionEntities.FirstOrDefaultAsync(d => d.InternalTransactionId == invoiceId);
     }
 
     public async Task<bool> UpdateTransactionStatusAsync(string internalTransactionId, TransactionStatusEnum statusEnum)
@@ -37,10 +47,20 @@ public class DonationService : IDonationService
         return result > 0;
     }
 
-    public Task<dynamic> GetTransactionByIdAsync()
+    public async Task<bool> UpsertTransactionEntityByExternalIdAsync(string externalId, DonationTransactionEntity entity)
     {
-        throw new NotImplementedException();
+        var existedEntity =
+            await _dbContext.DonationTransactionEntities.FirstOrDefaultAsync(d => d.InternalTransactionId == externalId);
+        if (existedEntity == null)
+        {
+            return await CreateTransactionAsync(entity);
+        }
+        
+        _dbContext.Entry(existedEntity).CurrentValues.SetValues(entity);
+        var result = await _dbContext.SaveChangesAsync();
+        return result > 0;
     }
+    
 
     public string GenerateInternalTransactionId()
     {

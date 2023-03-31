@@ -39,7 +39,7 @@ builder.Services.AddAuthorization();
 // Add Rabbit
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<PaymentConsumer>();
+    x.AddConsumer<PaypalCaptureConsumer>();
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
         cfg.Host(new Uri("rabbitmq://localhost"),h =>
@@ -47,11 +47,11 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-        cfg.ReceiveEndpoint("zalo-callback", ep =>
+        cfg.ReceiveEndpoint("paypal-capture", ep =>
         {
             ep.PrefetchCount = 16;
             ep.UseMessageRetry(r => r.Interval(2, 100));
-            ep.ConfigureConsumer<PaymentConsumer>(provider);
+            ep.ConfigureConsumer<PaypalCaptureConsumer>(provider);
         });
     }));
 });
@@ -64,6 +64,8 @@ builder.Services.AddGrpc();
 
 // Add ENVs IOption
 builder.Services.Configure<ZaloPayOption>(configuration.GetSection("ZaloPay"));
+builder.Services.Configure<PaypalOption>(configuration.GetSection("Paypal"));
+
 // Add Auto mapper
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 
@@ -76,6 +78,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 builder.Services.AddScoped<IDonationService, DonationService>();
+builder.Services.AddScoped<IPaypalService, PaypalService>();
+
 
 
 // Add MediatR

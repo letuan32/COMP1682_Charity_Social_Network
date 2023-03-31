@@ -8,6 +8,6 @@ public class CreateDonationTransactionCommand : IRequest<CreateDonationTransacti
 {
     public int PostId { get; set; }
     public long Amount { get; set; }
-    public BankingTypeEnum BankingType { get; set; }
+    public BankingTypeEnum? BankingType { get; set; }
     public PaymentServiceEnum PaymentService { get; set; }
 }

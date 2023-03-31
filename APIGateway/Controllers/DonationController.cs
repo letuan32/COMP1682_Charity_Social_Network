@@ -1,6 +1,8 @@
 ﻿using APIGateway.CQRS.Commands;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SharedModels.Paypal;
 using TDonation;
 
 
@@ -14,13 +16,16 @@ public class DonationController : ControllerBase
     private readonly Payment.PaymentClient _paymentClient;
     private readonly ILogger<WeatherController> _logger;
     private readonly IMediator _mediator;
+    private readonly IBus _bus;
 
 
-    public DonationController(Payment.PaymentClient paymentClient, ILogger<WeatherController> logger, IMediator mediator)
+
+    public DonationController(Payment.PaymentClient paymentClient, ILogger<WeatherController> logger, IMediator mediator, IBus bus)
     {
         _paymentClient = paymentClient;
         _logger = logger;
         _mediator = mediator;
+        _bus = bus;
     }
 
     [HttpPost]
@@ -36,6 +41,23 @@ public class DonationController : ControllerBase
     {
         var processResult =await _mediator.Send(request);
         return Ok(processResult);
+    }
+    
+    [HttpPost]
+    [Route("paypal-capture")]
+    public async Task<IActionResult> PaypalCapture([FromBody] PaypalPaymentCaptureMessage request)
+    {
+        var endpoint = await _bus.GetSendEndpoint(new Uri("rabbitmq://localhost/paypal-capture"));
+        var headers = new Dictionary<string, object>();
+        headers["Authorization"] = "Bearer myAccessToken";
+        await endpoint.Send(request, context =>
+        {
+            foreach (var keyValuePair in headers)
+            {
+                context.Headers.Set(keyValuePair.Key, keyValuePair.Value);
+            }
+        });
+        return Ok();
     }
     
 }

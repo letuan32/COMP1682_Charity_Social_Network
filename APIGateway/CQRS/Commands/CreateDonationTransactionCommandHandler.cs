@@ -51,7 +51,7 @@ public class CreateDonationTransactionCommandHandler : IRequestHandler<CreateDon
         {
             PostId = request.PostId,
             Amount = request.Amount,
-            BankingType = (int)request.BankingType,
+            BankingType = request.BankingType == null ? 0 : (int)request.BankingType,
             PaymentService = (int)request.PaymentService,
             Description = "Donation",
             UserId = _userService.GetUserIdAsync() ?? "1312321" //TODO: Get real user id

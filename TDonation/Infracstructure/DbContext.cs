@@ -15,7 +15,7 @@ public class DonationDbContext : DbContext
         DbContextOptions options, IUserService userService) : base(options)
     {
         _userService = userService;
-        _userId = _userService.GetUserId().GetAwaiter().GetResult();;
+        _userId = _userService.GetUserId();;
     }
     
     public DbSet<DonationTransactionEntity> DonationTransactionEntities { get; set; }

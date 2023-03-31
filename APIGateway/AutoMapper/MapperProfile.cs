@@ -14,7 +14,9 @@ public class MapperProfile : Profile
     public MapperProfile()
     {
         CreateMap<CreateTransactionReply, CreateDonationTransactionResponse>()
-            .ForMember(d => d.RedirecUrl, opt => opt.MapFrom(s => s.OrderUrl));
+            .ForMember(d => d.RedirecUrl, opt => opt.MapFrom(s => s.OrderUrl))
+            .ForMember(d => d.InternalTransactionId, opt => opt.MapFrom(s => s.TransToken));
+
 
         CreateMap<HandleZaloCallbackRequest, ZaloCallbackCommand>()
             .ForMember(d => d.Data, opt => opt.MapFrom(s => s.Data))

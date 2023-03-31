@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
+using System.Text.Json;
 using APIGateway.AutoMapper;
 using APIGateway.Configs;
 using APIGateway.Extensions;
@@ -16,6 +17,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using TDonation;
 using TPostService;
 
@@ -45,7 +48,13 @@ builder.Services.AddCors(options =>
         });
 });
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });;
 
 var filePath = Path.Combine(builder.Environment.ContentRootPath, "firebase-credentials.json");
 FirebaseApp.Create(new AppOptions

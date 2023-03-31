@@ -1,57 +1,46 @@
-﻿using MassTransit;
-using Microsoft.Extensions.Options;
+﻿using AutoMapper;
+using MassTransit;
 using Newtonsoft.Json;
-using SharedModels;
-using TDonation.Services.ZaloPayHelper.Crypto;
-using TDonation.Utils;
+using SharedModels.Paypal;
+using TDonation.Entities;
+using TDonation.Services.Interfaces;
 
 namespace TDonation.Consumers;
 
-public class PaymentConsumer : IConsumer<ZaloCallbackMessage>
+public class PaypalCaptureConsumer : IConsumer<PaypalPaymentCaptureMessage>
 {
-    private readonly ZaloPayOption _zaloPayOption;
+    private readonly IDonationService _donationService;
+    private readonly IUserService _userService;
+    private readonly IPaypalService _paypalService;
+    private readonly IMapper _mapper;
+    private readonly ILogger<PaypalCaptureConsumer> _logger;
 
-    public PaymentConsumer(IOptions<ZaloPayOption> zaloPayOption)
+    public PaypalCaptureConsumer(IDonationService donationService, ILogger<PaypalCaptureConsumer> logger, IUserService userService, IMapper mapper, IPaypalService paypalService)
     {
-        _zaloPayOption = zaloPayOption.Value;
+        _donationService = donationService;
+        _logger = logger;
+        _userService = userService;
+        _mapper = mapper;
+        _paypalService = paypalService;
     }
 
-    public Task Consume(ConsumeContext<ZaloCallbackMessage> context)
+    public async Task Consume(ConsumeContext<PaypalPaymentCaptureMessage> context)
     {
-        var contextMessage = context.Message;
-        
-        var result = new Dictionary<string, object>();
-        string key2 = "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf";
-        
-        try {
-            var dataStr = Convert.ToString(contextMessage.Data);
-            var reqMac = Convert.ToString(contextMessage.Mac);
-        
-            var mac = HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key2, dataStr);
-            
-        
-            // kiểm tra callback hợp lệ (đến từ ZaloPay server)
-            if (!reqMac.Equals(mac)) {
-                // callback không hợp lệ
-                result["return_code"] = -1;
-                result["return_message"] = "mac not equal";
-            }
-            else {
-                // thanh toán thành công
-                // merchant cập nhật trạng thái cho đơn hàng
-                var dataJson = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataStr);
-                Console.WriteLine("update order's status = success where app_trans_id = {0}", dataJson["app_trans_id"]);
-        
-                result["return_code"] = 1;
-                result["return_message"] = "success";
-            }
-        } catch (Exception ex) {
-            result["return_code"] = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
-            result["return_message"] = ex.Message;
-        }
 
-        // thông báo kết quả cho ZaloPay server
-        // return Ok(result); 
-        throw new NotImplementedException();
+        try
+        {
+            var paypalResponse = await _paypalService.CapturePaymentAsync(context.Message.PaymentId);
+            var donationTransactionEntity = _mapper.Map<DonationTransactionEntity>(paypalResponse);
+
+            var result =
+                await _donationService.UpsertTransactionEntityByExternalIdAsync(
+                    donationTransactionEntity.InternalTransactionId, donationTransactionEntity);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
     }
 }

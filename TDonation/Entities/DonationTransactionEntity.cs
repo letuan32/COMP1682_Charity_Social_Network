@@ -9,7 +9,7 @@ public class DonationTransactionEntity : BaseIdEntity<int>, IBaseEntity
     public DonationTransactionEntity()
     {
     }
-    public DonationTransactionEntity(int postId, long amount, string internalSenderId, string internalReceiverId, string internalTransactionId, TransactionTypeEnum transactionType, CurrencyEnum currency, PaymentServiceEnum paymentServiceEnum, string description, TransactionStatusEnum status, string? message, string transactionToken)
+    public DonationTransactionEntity(int postId, long amount, string internalSenderId, string internalReceiverId, string internalTransactionId, TransactionTypeEnum transactionType, CurrencyEnum currency, PaymentServiceEnum paymentServiceEnum, string description, TransactionStatusEnum status, string? message, string transactionToken, string? additionalData = null)
     {
         PostId = postId;
         Amount = amount;
