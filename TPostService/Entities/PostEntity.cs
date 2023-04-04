@@ -22,6 +22,8 @@ public class PostEntity : BaseIdEntity<int>, IBaseEntity
     public DateTime? ExpectedReceivedDate { get; set; }
     public PostCategoryEnum PostCategoryEnum { get; set; }
     public CurrencyEnum CurrencyEnum { get; set; }
+    public PostApproveStatusEnum ApproveStatusEnum { get; set; }
+
     public virtual ICollection<CommentEntity> CommentsEntities { get; set; }
     public virtual ICollection<ReactionEntity> ReactionEntities { get; set; }
 

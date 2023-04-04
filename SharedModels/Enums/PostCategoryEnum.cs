@@ -4,7 +4,7 @@ namespace SharedModels.Enums;
 
 public enum PostCategoryEnum
 {
-    [Description("Request financial assistance")]
+    [Description("Request Financial")]
     FinancialRequest = 1,
     
     [Description("Sharing")]

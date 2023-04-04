@@ -26,6 +26,20 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
         _logger = logger;
     }
 
+    public override async Task<GetPostsReply> GetUnApprovePosts(GetUnApprovePostsRequest request, ServerCallContext context)
+    {
+        _logger.LogInformation("Receive grpc GetUnApprovePosts request. {Request}", request);
+        var response = await _mediator.Send(new GetPostsQuery(){IsApproved = false});
+
+        if (response != null)
+        {
+            return _mapper.Map<GetPostsReply>(response);
+        }
+        context.Status = new Status(StatusCode.NotFound, "Not found");
+
+        return null;
+    }
+
 
     public override async Task<PostReply> GetPostById(GetPostByIdRequest request, ServerCallContext context)
     {

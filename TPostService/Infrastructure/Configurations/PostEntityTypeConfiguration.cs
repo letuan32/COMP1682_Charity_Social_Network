@@ -60,6 +60,15 @@ public class PostEntityTypeConfiguration : BaseEntityTypeConfiguration<PostEntit
             .HasColumnName("currency")
             .IsRequired();
         
+        builder.Property(e => e.ApproveStatusEnum)
+            .HasConversion(
+                v => v.GetDescription(),
+                v => EnumHelper.ParseEnumValue<PostApproveStatusEnum>(v)
+            )
+            .HasColumnName("approve_status")
+            .IsRequired()
+            .HasDefaultValue(PostApproveStatusEnum.Pending);
+        
         builder.HasMany<CommentEntity>(c => c.CommentsEntities)
             .WithOne(p => p.PostEntity)
             .HasForeignKey(c => c.PostId);

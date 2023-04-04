@@ -13,7 +13,7 @@ service PostGrpc {
   rpc GetPosts(GetPostsRequest) returns (GetPostsReply);
   rpc GetPostDonationBankingDescription(GetDonationBankingDescriptionRequest) returns (GetDonationBankingDescriptionReply);
   rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
-
+  rpc GetUnApprovePosts(GetUnApprovePostsRequest) returns (GetPostsReply);
 }
 
 
@@ -27,7 +27,7 @@ message PostReply {
   string Content = 2;
   int32 NumberOfDonation = 3;
   string CreatedById = 4;
-  repeated string ImageUrls = 5;
+  repeated string MediaUrls = 5;
   repeated string VideoUrls = 6;
   int32 NumberOfComment = 7;
   PostAuthorReply Author = 8;
@@ -38,10 +38,18 @@ message PostReply {
   int32 views = 13;
   int64 expectedAmount = 14;
   string currency = 15;
-  
+  string category = 16;
+  string approveStatus = 17;
+  string documentUrls = 18;
+
+
 }
 
 message GetPostsRequest{
+
+}
+
+message GetUnApprovePostsRequest{
 
 }
 
@@ -54,7 +62,7 @@ message PostItemReply{
   string Content = 2;
   int32 NumberOfDonation = 3;
   string CreatedById = 4;
-  repeated string ImageUrls = 5;
+  repeated string MediaUrls = 5;
   repeated string VideoUrls = 6;
   int32 NumberOfComment = 7;
   PostAuthorReply Author = 8;
@@ -65,6 +73,9 @@ message PostItemReply{
   int32 views = 13;
   int64 expectedAmount = 14;
   string currency = 15;
+  string category = 16;
+  string approveStatus = 17;
+  repeated string documentUrls = 18;
 
 }
 

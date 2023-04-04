@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using SharedModels.Enums;
 using TPostService.CQRS.Commands;
 using TPostService.Entities;
 using TPostService.Infrastructure;
@@ -23,64 +24,66 @@ public class PostService : IPostService
         _mapper = mapper;
     }
 
-    public async Task<IList<PostViewModel>?> GetPostsAsync()
+    public async Task<IList<PostViewModel>?> GetApprovedPostsAsync()
     {
-        // TODO: Implement
-        var viewModels = new List<PostViewModel>()
+        var postViewModels = await _postDbContext.PostEntities
+            .Where(p => p.ApproveStatusEnum == PostApproveStatusEnum.Approved)
+            .Include(p => p.CommentsEntities)
+            .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
+            .AsNoTracking()
+            .ToListAsync();
+
+        if (!postViewModels.Any())
         {
-            new()
-            {
-                Id = 1,
-                Content = "This is a sample post",
-                NumberOfDonation = 10,
-                CreatedById = "user123",
-                MediaUrls = new List<string> { "https://example.com/image1.jpg", "https://example.com/image2.jpg" },
-                NumberOfComment = 2,
-                Author = new PostAuthorViewModel()
-                {
-                    Email = "test@gmail.com",
-                    DisplayName = "Test Name",
-                    AvatarUrl = "https://gravatar.com/avatar/3fa2989800b80fc30df5ebcb707d7637?s=400&d=robohash&r=x"
-                },
-                Location = "Da Nang",
-                CreatedAt = DateTime.Now
+            return null;
+        }
 
-            },
-            new()
-            {
-                Id = 2,
-                Content = "This is the second post",
-                NumberOfDonation = 10,
-                CreatedById = "user2",
-                MediaUrls = new List<string> { "https://example.com/image2-1.jpg", "https://example.com/image2-2.jpg" },
-                NumberOfComment = 3,
-                Author = new()
-                {
-                    Email = "letuanlttt@gmail.com",
-                    DisplayName = "Tuan Le",
-                    AvatarUrl = "https://gravatar.com/avatar/96f9e4848bbcd456d5640e142dc04072?s=400&d=robohash&r=x"
-                },
-                Location = "Da Nang",
-                CreatedAt = DateTime.Now
-            }
-        };
+        foreach (var post in postViewModels)
+        {
+            var user = await _firebaseService.GetUserAsync(post.CreatedById);
+            post.Author = _mapper.Map<PostAuthorViewModel>(user);
+        }
 
-        return await Task.FromResult<IList<PostViewModel>>(viewModels);
+        return postViewModels;
     }
 
-    public async Task<PostViewModel?> GetPostByIdAsync(int postId)
+    public async Task<IList<PostViewModel>?> GetPrivatePostsAsync()
+    {
+        var postViewModels = await _postDbContext.PostEntities
+            .Where(p => p.ApproveStatusEnum != PostApproveStatusEnum.Approved)
+            .Include(p => p.CommentsEntities)
+            .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
+            .AsNoTracking()
+            .ToListAsync();
+
+        if (!postViewModels.Any())
+        {
+            return null;
+        }
+
+        foreach (var post in postViewModels)
+        {
+            var user = await _firebaseService.GetUserAsync(post.CreatedById);
+            post.Author = _mapper.Map<PostAuthorViewModel>(user);
+        }
+
+        return postViewModels;
+    }
+
+    public async Task<PostViewModel?> GetApprovedPostByIdAsync(int postId)
     {
         var postViewModel = await _postDbContext.PostEntities
+            // .Where(p => p.ApproveStatusEnum == PostApproveStatusEnum.Approved)
             .Include(p => p.CommentsEntities)
             .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == postId);
-        
+
         if (postViewModel == null)
         {
             return null;
         }
-        
+
         var user = await _firebaseService.GetUserAsync(postViewModel.CreatedById);
         postViewModel.Author = _mapper.Map<PostAuthorViewModel>(user);
 
@@ -105,5 +108,16 @@ public class PostService : IPostService
         };
 
         return await Task.FromResult(viewModel);
+    }
+
+    public async Task<bool> UpdateApproveStatusAsync(int postId, PostApproveStatusEnum postApproveStatus)
+    {
+        var entity = await _postDbContext.PostEntities.FirstOrDefaultAsync(p => p.Id == postId);
+
+        if (entity == null) return false;
+
+        entity.ApproveStatusEnum = postApproveStatus;
+        var result = await _postDbContext.SaveChangesAsync();
+        return result > 0;
     }
 }

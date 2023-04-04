@@ -2,10 +2,12 @@ using System.Reflection;
 using System.Security.Claims;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TPostService.Consumers;
 using TPostService.GrpcServices;
 using TPostService.Heplers;
 using TPostService.Infrastructure;
@@ -53,7 +55,26 @@ builder.Services.AddGrpc(options =>
 });
 builder.Services.AddGrpcReflection();
 
-
+// Add RabbitMQ
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<UpdatePostApproveStatusConsumer>();
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+    {
+        cfg.Host(new Uri("rabbitmq://localhost"),h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        cfg.ReceiveEndpoint("post-approve-status", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 100));
+            ep.ConfigureConsumer<UpdatePostApproveStatusConsumer>(provider);
+        });
+    }));
+});
+builder.Services.AddMassTransitHostedService();
 // Add Auto mapper
 builder.Services.AddAutoMapper(typeof(PostMapperProfile));
 

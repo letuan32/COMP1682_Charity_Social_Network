@@ -16,6 +16,7 @@ public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IList<PostVie
 
     public async Task<IList<PostViewModel>?> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
-        return await _postService.GetPostsAsync();
+        
+        return !request.IsApproved ? await _postService.GetPrivatePostsAsync() : await _postService.GetApprovedPostsAsync();
     }
 }

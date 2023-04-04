@@ -15,6 +15,6 @@ public class GetPostDetailQueryHandler : IRequestHandler<GetPostDetailQuery, Pos
 
     public async Task<PostViewModel?> Handle(GetPostDetailQuery request, CancellationToken cancellationToken)
     {
-        return await _postService.GetPostByIdAsync(request.PostId);
+        return await _postService.GetApprovedPostByIdAsync(request.PostId);
     }
 }

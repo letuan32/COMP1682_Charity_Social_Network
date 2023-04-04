@@ -18,6 +18,11 @@ public class PostMapperProfile : Profile
         CreateMap<PostViewModel, PostItemReply>()
             .ForMember(d => d.Author, opt => opt.MapFrom(s => s.Author))
             .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => Timestamp.FromDateTime(s.CreatedAt.ToUniversalTime())))
+            .ForMember(d => d.ExpectedReceivedDate, opt => opt.MapFrom(s => Timestamp.FromDateTime(s.ExpectedReceivedDate.ToUniversalTime())))
+            .ForMember(d => d.VideoUrls, opt => opt.MapFrom(s => s.MediaUrls.ToList()))
+            .ForMember(d => d.MediaUrls, opt => opt.MapFrom(s => s.MediaUrls.ToList()
+            ))
+            .ForMember(d => d.DocumentUrls, opt => opt.MapFrom(s => s.DocumentUrls.ToList()))
             .ReverseMap();
         
         CreateMap<PostViewModel, PostReply>()
@@ -47,6 +52,8 @@ public class PostMapperProfile : Profile
             .ForMember(d => d.ExpectedReceivedDate, opt => opt.MapFrom(s => s.ExpectedReceivedDate))
             .ForMember(d => d.Views, opt => opt.MapFrom(s => s.Views))
             .ForMember(d => d.Currency, opt => opt.MapFrom(s => s.CurrencyEnum.GetDescription()))
+            .ForMember(d => d.Category, opt => opt.MapFrom(s => s.PostCategoryEnum.GetDescription()))
+            .ForMember(d => d.ApproveStatus, opt => opt.MapFrom(s => s.ApproveStatusEnum.GetDescription()))
             .ForMember(d => d.NumberOfDonation, opt => opt.MapFrom(s => s.Donations))
             .ForMember(d => d.NumberOfComment,
                 opt => opt.MapFrom(s => s.CommentsEntities.Any() ? s.CommentsEntities.Count : 0));
@@ -72,6 +79,7 @@ public class PostMapperProfile : Profile
             .ForMember(d => d.ExpectedAmount, opt => opt.MapFrom(s => s.ExpectedAmount))
             .ForMember(d => d.ExpectedReceivedDate, opt => opt.MapFrom(s => s.ExpectedReceivedDate))
             .ForMember(d => d.PostCategoryEnum, opt => opt.MapFrom(s => s.PostCategoryEnum))
+            .ForMember(d => d.ApproveStatusEnum, opt => opt.MapFrom(s => PostApproveStatusEnum.InProcess))
             .ForMember(d => d.CurrencyEnum, opt => opt.MapFrom(s => s.CurrencyEnum));
 
     }

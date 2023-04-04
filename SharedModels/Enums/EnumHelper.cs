@@ -16,6 +16,15 @@ public static class EnumHelper
 
     public static TEnum ParseEnumValue<TEnum>(string value)
     {
+        foreach (var field in typeof(TEnum).GetFields())
+        {
+            if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is not DescriptionAttribute
+                descriptionAttribute) continue;
+            if (descriptionAttribute.Description == value)
+            {
+                return (TEnum)field.GetValue(null);
+            }
+        }
         return (TEnum)Enum.Parse(typeof(TEnum), value, true);
     }
 }

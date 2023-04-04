@@ -9,8 +9,8 @@ public record PostViewModel
     public string Location { get; set; }
     public int NumberOfDonation { get; set; }
     public int Views { get; set; }
-    public List<string>? MediaUrls { get; set; }
-    public List<string>? DocumentUrls { get; set; }
+    public List<string> MediaUrls { get; set; } = new List<string>();
+    public List<string> DocumentUrls { get; set; } = new List<string>();
     public int NumberOfComment { get; set; }
     public long ExpectedAmount { get; set; }
     public PostAuthorViewModel Author { get; set; }
@@ -18,6 +18,6 @@ public record PostViewModel
     public DateTime CreatedAt { get; set; }
     public DateTime ExpectedReceivedDate { get; set; }
     public string Currency { get; set; }
-
-
+    public string Category { get; set; }
+    public string ApproveStatus { get; set; }
 }
