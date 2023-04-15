@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Security.Claims;
+using Firebase.Database;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using MassTransit;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SharedModels.Options;
 using TPostService.Consumers;
 using TPostService.GrpcServices;
 using TPostService.Heplers;
@@ -21,6 +23,7 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .Build();
+builder.Services.Configure<ShareFirebaseOption>(configuration.GetSection("FirebaseOptions"));
 
 var filePath = Path.Combine(builder.Environment.ContentRootPath, "firebase-credentials.json");
 FirebaseApp.Create(new AppOptions

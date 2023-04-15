@@ -90,12 +90,12 @@ public class PostService : IPostService
         return postViewModel;
     }
 
-    public async Task<bool> CreatePostAsync(CreatePostCommand postViewModel)
+    public async Task<int> CreatePostAsync(CreatePostCommand postViewModel)
     {
         var entity = _mapper.Map<PostEntity>(postViewModel);
         await _postDbContext.PostEntities.AddAsync(entity);
         var result = await _postDbContext.SaveChangesAsync();
-        return result > 0;
+        return entity.Id;
     }
 
     public async Task<PostBakingDescriptionViewModel?> GetPostBankingDescriptionAsync(int postId)

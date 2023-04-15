@@ -81,6 +81,6 @@ public class PostMapperProfile : Profile
             .ForMember(d => d.PostCategoryEnum, opt => opt.MapFrom(s => s.PostCategoryEnum))
             .ForMember(d => d.ApproveStatusEnum, opt => opt.MapFrom(s => PostApproveStatusEnum.InProcess))
             .ForMember(d => d.CurrencyEnum, opt => opt.MapFrom(s => s.CurrencyEnum));
-
+        
     }
 }

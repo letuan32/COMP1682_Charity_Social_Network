@@ -11,7 +11,7 @@ public interface IPostService
     Task<IList<PostViewModel>?> GetApprovedPostsAsync();
     Task<IList<PostViewModel>?> GetPrivatePostsAsync();
     Task<PostViewModel?> GetApprovedPostByIdAsync(int postId);
-    Task<bool> CreatePostAsync(CreatePostCommand postViewModel);
+    Task<int> CreatePostAsync(CreatePostCommand postViewModel);
     Task<PostBakingDescriptionViewModel?> GetPostBankingDescriptionAsync(int postId);
     Task<bool> UpdateApproveStatusAsync(int postId, PostApproveStatusEnum postApproveStatus);
 
