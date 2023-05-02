@@ -85,6 +85,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
         return null;
     }
 
+    [Authorize]
     public override async Task<CreatePostResponse> CreatePost(CreatePostRequest request, ServerCallContext context)
     {
         var command = _mapper.Map<CreatePostCommand>(request);

@@ -1,4 +1,5 @@
 ﻿using APIGateway.CQRS.Commands;
+using APIGateway.CQRS.Queries;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,11 @@ public class DonationController : ControllerBase
         _bus = bus;
     }
 
+    /// <summary>
+    /// Creates a new donation
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> CreateTransaction(CreateDonationTransactionCommand request)
     {
@@ -35,6 +41,11 @@ public class DonationController : ControllerBase
         return Ok(response);
     }
 
+    /// <summary>
+    /// Receive ZaloPay callback
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("zalo-callBack")]
     public async Task<IActionResult> ZaloPayCallBack(ZaloCallbackCommand request)
@@ -43,6 +54,11 @@ public class DonationController : ControllerBase
         return Ok(processResult);
     }
     
+    /// <summary>
+    /// Receive Paypal Payment Capture callback
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("paypal-capture")]
     public async Task<IActionResult> PaypalCapture([FromBody] PaypalPaymentCaptureMessage request)
@@ -60,4 +76,51 @@ public class DonationController : ControllerBase
         return Ok();
     }
     
+    /// <summary>
+    /// Disburse donation to post owner
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("disburse")]
+    public async Task<IActionResult> Disburse([FromBody] DisburseCommand request)
+    {
+        var result = await _mediator.Send(request);
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Retrieves a list of donations
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IActionResult> GetDonations([FromQuery] GetDonationQuery request)
+    {
+        var result = await _mediator.Send(request);
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Retrieves the details of a single donation by ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetDonationById(int id)
+    {
+        throw new NotImplementedException();
+    }
+    
+    /// <summary>
+    /// Retrieves the total amount of donations
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    [HttpGet("totalAmount")]
+    public async Task<IActionResult> GetTotalDonationAmount()
+    {
+        throw new NotImplementedException();
+    }
 }

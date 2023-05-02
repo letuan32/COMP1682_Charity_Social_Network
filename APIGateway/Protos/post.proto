@@ -16,11 +16,9 @@ service PostGrpc {
   rpc GetUnApprovePosts(GetUnApprovePostsRequest) returns (GetPostsReply);
 }
 
-
 message GetPostByIdRequest {
   int32 id = 1;
 }
-
 
 message PostReply {
   int32 Id = 1;
@@ -41,8 +39,6 @@ message PostReply {
   string category = 16;
   string approveStatus = 17;
   string documentUrls = 18;
-
-
 }
 
 message GetPostsRequest{

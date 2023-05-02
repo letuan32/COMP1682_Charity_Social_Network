@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -43,10 +44,6 @@
         <Protobuf Include="Protos\payment.proto" GrpcServices="Client"></Protobuf>
         <Protobuf Include="Protos\post.proto" GrpcServices="Client">
         </Protobuf>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="CQRS\Queries" />
     </ItemGroup>
 
     <ItemGroup>

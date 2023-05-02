@@ -89,6 +89,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFirebaseService, FirebaseService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 builder.Services.AddDbContext<PostDbContext>(opt =>
     opt.UseNpgsql(configuration.GetConnectionString("Default")));
 
@@ -99,6 +100,13 @@ builder.Services.AddTransient<UserPropertyHelper>();
 
 
 var app = builder.Build();
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 if (app.Environment.IsDevelopment())

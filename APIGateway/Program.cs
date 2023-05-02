@@ -46,6 +46,13 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod()
                 .AllowAnyOrigin();
         });
+    options.AddPolicy("PaypalCapture",
+        policy =>
+        {
+            policy.WithOrigins("https://www.paypal.com")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
 });
 // Add services to the container.
 builder.Services.AddControllers()
@@ -142,7 +149,7 @@ builder.Services.AddGrpcClient<Payment.PaymentClient>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "TCharity API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -159,15 +166,17 @@ builder.Services.AddSwaggerGen(option =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
-            new string[]{}
+            new string[] { }
         }
     });
-    
-    
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    option.IncludeXmlComments(xmlPath);
+
 });
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
@@ -178,7 +187,13 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
 app.UseSwagger();
 app.UseSwaggerUI();
 

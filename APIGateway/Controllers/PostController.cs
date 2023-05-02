@@ -27,6 +27,10 @@ public class PostController : ControllerBase
         _bus = bus;
     }
 
+    /// <summary>
+    /// Retrieve a list of posts
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetPostsAsync()
     {
@@ -34,6 +38,10 @@ public class PostController : ControllerBase
         return Ok(response);
     }
     
+    /// <summary>
+    /// Retrieve a list of un-approve posts
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("un-approve")]
     public async Task<IActionResult> GetPrivatePostsAsync()
     {
@@ -41,6 +49,11 @@ public class PostController : ControllerBase
         return Ok(response);
     }
     
+    /// <summary>
+    /// Submit a new post
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> CreatePostsAsync(CreatePostCommand request)
     {
@@ -51,6 +64,11 @@ public class PostController : ControllerBase
         return BadRequest(response);
     }
     
+    /// <summary>
+    /// Retrieve a post by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetPostByIdAsync([FromRoute] int id)
@@ -59,6 +77,11 @@ public class PostController : ControllerBase
         return Ok(response);
     }
     
+    /// <summary>
+    /// Get post banking description template for donation
+    /// </summary>
+    /// <param name="postId"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("bankingDescription")]
     public async Task<IActionResult> GetPostBankingDescription([FromQuery]int postId)
@@ -67,6 +90,11 @@ public class PostController : ControllerBase
         return Ok(response);
     }
     
+    /// <summary>
+    /// Submit verify result for a post
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("approve")]
     public async Task<IActionResult> Approve([FromBody] UpdatePostApproveStatusMessage request)
