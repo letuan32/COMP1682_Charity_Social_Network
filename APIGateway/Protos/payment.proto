@@ -9,6 +9,7 @@ import "google/protobuf/field_mask.proto";
 service Payment {
   rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionReply);
   rpc HandleZaloCallback (HandleZaloCallbackRequest) returns (HandleZaloCallbackReply);
+  rpc DisburseDonation (DisburseDonationRequest) returns (DisburseDonationReply);
 }
 
 // The request to make transaction
@@ -39,4 +40,14 @@ message HandleZaloCallbackRequest{
 message HandleZaloCallbackReply{
   int32 return_code = 1;
   string return_message = 2;
+}
+
+message DisburseDonationRequest{
+  int32 PostId = 1;
+  string userEmail = 2;
+}
+
+message DisburseDonationReply{
+ int32 return_code = 1;
+ string return_message = 2;
 }

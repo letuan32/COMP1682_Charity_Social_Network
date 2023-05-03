@@ -5,4 +5,6 @@ namespace TDonation.Services.Interfaces;
 public interface IPaypalService
 {
     Task<PaypalCaptureResponse> CapturePaymentAsync(string paymentId);
+    Task<CreatePayPalBathPayoutResponse> Payout(CreatePayPalBathPayoutRequest request);
+
 }

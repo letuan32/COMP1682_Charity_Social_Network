@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using APIGateway.CQRS.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIGateway.Controllers;
@@ -8,7 +10,17 @@ namespace APIGateway.Controllers;
 [Route("[controller]")]
 public class IdentityController : ControllerBase
 {
-    
+    private readonly IMediator _mediator;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="mediator"></param>
+    public IdentityController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
     /// <summary>
     /// Register an account
     /// </summary>
@@ -73,6 +85,14 @@ public class IdentityController : ControllerBase
     {
         // TODO: Define request body, forward the request to Identity service
         throw new NotImplementedException();
+    }
+
+    [HttpGet]
+    [Route("user")]
+    public async Task<IActionResult> GetUser([FromQuery] GetUserByEmailQuery query)
+    {
+        var user = await _mediator.Send(query);
+        return Ok(user);
     }
 
 }

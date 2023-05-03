@@ -32,4 +32,16 @@ public class PaypalService : IPaypalService
             .AppendPathSegment(paymentId)
             .GetJsonAsync<PaypalCaptureResponse>();
     }
+
+    public async Task<CreatePayPalBathPayoutResponse> Payout(CreatePayPalBathPayoutRequest request)
+    {
+        var base64Data = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_paypalOption.ClientId}:{_paypalOption.ClientSecret}")); // credentials
+
+        var response = await _paypalOption.CreatePayoutUrl
+            .WithHeader("Authorization", $"Basic {base64Data}")
+            .PostJsonAsync(request)
+            .ReceiveJson<CreatePayPalBathPayoutResponse>();
+
+        return response;
+    }
 }

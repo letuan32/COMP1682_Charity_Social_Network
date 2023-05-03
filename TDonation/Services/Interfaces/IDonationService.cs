@@ -9,5 +9,7 @@ public interface IDonationService
     Task<bool> CreateTransactionAsync(DonationTransactionEntity entity);
     Task<bool> UpdateTransactionStatusAsync(string postId, TransactionStatusEnum statusEnum);
     Task<bool> UpsertTransactionEntityByExternalIdAsync(string externalId, DonationTransactionEntity entity);
+    Task<long> GetDonationAmountByPostId(int postId);
+
 
 }

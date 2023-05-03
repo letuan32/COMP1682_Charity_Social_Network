@@ -1,7 +1,9 @@
 ﻿using APIGateway.CQRS.Commands;
 using APIGateway.CQRS.Commands.PostCommands;
 using APIGateway.DTOs.Donations;
+using APIGateway.DTOs.Users;
 using AutoMapper;
+using FirebaseAdmin.Auth;
 using Google.Protobuf.WellKnownTypes;
 using SharedModels;
 using TDonation;
@@ -38,5 +40,12 @@ public class MapperProfile : Profile
             .ForMember(dest => dest.CurrencyEnum, opt => opt.MapFrom(src => (int)src.CurrencyEnum))
             .ForMember(dest => dest.MediaUrls, opt => opt.MapFrom(src => src.MediaUrls ?? new List<string>()))
             .ForMember(dest => dest.DocumentUrls, opt => opt.MapFrom(src => src.DocumentUrls ?? new List<string>()));
+
+        CreateMap<UserRecord, GetUserResponse>()
+            .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Uid))
+            .ForMember(d => d.IsDisable, opt => opt.MapFrom(s => s.Disabled))
+            .ForMember(d => d.Email, opt => opt.MapFrom(s => s.Email))
+            .ForMember(d => d.DisplayName, opt => opt.MapFrom(s => s.DisplayName))
+            .ForMember(d => d.ProfilePicture, opt => opt.MapFrom(s => s.PhotoUrl));
     }
 }

@@ -60,7 +60,14 @@ public class DonationService : IDonationService
         var result = await _dbContext.SaveChangesAsync();
         return result > 0;
     }
-    
+
+    public Task<long> GetDonationAmountByPostId(int postId)
+    {
+        return _dbContext.DonationTransactionEntities
+            .Where(d => d.PostId == postId)
+            .SumAsync(d => d.Amount);
+    }
+
 
     public string GenerateInternalTransactionId()
     {

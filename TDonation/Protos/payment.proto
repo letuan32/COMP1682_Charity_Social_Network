@@ -10,6 +10,7 @@ service Payment {
   // Sends a greeting
   rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionReply);
   rpc HandleZaloCallback (HandleZaloCallbackRequest) returns (HandleZaloCallbackReply);
+  rpc DisburseDonation (DisburseDonationRequest) returns (DisburseDonationReply);
 
 }
 
@@ -40,6 +41,17 @@ message HandleZaloCallbackRequest{
 }
 
 message HandleZaloCallbackReply{
+ int32 return_code = 1;
+ string return_message = 2;
+}
+
+
+message DisburseDonationRequest{
+  int32 PostId = 1;
+  string userEmail = 2;
+}
+
+message DisburseDonationReply{
  int32 return_code = 1;
  string return_message = 2;
 }
