@@ -11,5 +11,7 @@ public enum PostApproveStatusEnum
     [Description("Approved")]
     Approved = 3,
     [Description("Reject")]
-    Reject = 4
+    Reject = 4,
+    [Description("Disbursed")]
+    Disbursed = 5
 }

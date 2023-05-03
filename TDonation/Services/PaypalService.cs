@@ -22,7 +22,7 @@ public class PaypalService : IPaypalService
         _mapper = mapper;
     }
 
-    public async Task<PaypalCaptureResponse> CapturePaymentAsync(string paymentId)
+    public async Task<PaypalCaptureResponse> CapturePaymentAsync(string paymentId, int postId)
     {
         var base64Data = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_paypalOption.ClientId}:{_paypalOption.ClientSecret}")); // credentials
         

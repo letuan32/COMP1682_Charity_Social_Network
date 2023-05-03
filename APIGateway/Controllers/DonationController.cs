@@ -77,6 +77,28 @@ public class DonationController : ControllerBase
     }
     
     /// <summary>
+    /// Receive Paypal Payment Capture callback
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("paypal-event")]
+    public async Task<IActionResult> PaypalCapture([FromBody] object request)
+    {
+        var endpoint = await _bus.GetSendEndpoint(new Uri("rabbitmq://localhost/paypal-capture"));
+        var headers = new Dictionary<string, object>();
+        headers["Authorization"] = "Bearer myAccessToken";
+        await endpoint.Send(request, context =>
+        {
+            foreach (var keyValuePair in headers)
+            {
+                context.Headers.Set(keyValuePair.Key, keyValuePair.Value);
+            }
+        });
+        return Ok();
+    }
+    
+    /// <summary>
     /// Disburse donation to post owner
     /// </summary>
     /// <param name="request"></param>

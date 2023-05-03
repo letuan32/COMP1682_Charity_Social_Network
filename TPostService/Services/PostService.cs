@@ -27,7 +27,8 @@ public class PostService : IPostService
     public async Task<IList<PostViewModel>?> GetApprovedPostsAsync()
     {
         var postViewModels = await _postDbContext.PostEntities
-            .Where(p => p.ApproveStatusEnum == PostApproveStatusEnum.Approved)
+            .Where(p => p.ApproveStatusEnum == PostApproveStatusEnum.Approved || p.ApproveStatusEnum == PostApproveStatusEnum.Disbursed)
+            .OrderByDescending(p => p.Id)
             .Include(p => p.CommentsEntities)
             .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
             .AsNoTracking()
@@ -50,7 +51,7 @@ public class PostService : IPostService
     public async Task<IList<PostViewModel>?> GetPrivatePostsAsync()
     {
         var postViewModels = await _postDbContext.PostEntities
-            .Where(p => p.ApproveStatusEnum != PostApproveStatusEnum.Approved)
+            .Where(p => p.ApproveStatusEnum != PostApproveStatusEnum.Approved && p.ApproveStatusEnum != PostApproveStatusEnum.Disbursed)
             .Include(p => p.CommentsEntities)
             .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
             .AsNoTracking()

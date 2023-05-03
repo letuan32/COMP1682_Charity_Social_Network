@@ -52,7 +52,20 @@ public class MapperProfile : Profile
             .ForMember(dest => dest.StatusEnum,
                 opt => opt.MapFrom(src =>
                     src.Status == "COMPLETED" ? TransactionStatusEnum.Success : TransactionStatusEnum.InProcess))
+            .ForMember(d => d.Amount, opt => opt.MapFrom(s => (long)float.Parse(s.Amount.Value)))
+            .ForMember(d => d.CurrencyEnum, opt => 
+                opt.MapFrom(s => "USD"))
+            .ForMember(d => d.InternalSenderId, opt => opt.MapFrom(s => s.CustomId))
+            .ForMember(d => d.TransactionTypeEnum, opt => opt.MapFrom(s => TransactionTypeEnum.Donation))
+            .ForMember(d => d.PaymentServiceEnum, opt => opt.MapFrom(s => PaymentServiceEnum.Paypal))
+            .ForMember(d => d.TransactionToken, opt => opt.MapFrom(s => s.Id))
+            .ForMember(d => d.Description, opt => opt.MapFrom(s => $"Donation"))
+            .ForMember(d => d.InternalReceiverId, opt => opt.MapFrom(s => ""))
+            .ForMember(d => d.Id, opt => opt.Ignore())
+            .ForMember(d => d.CreatedBy, opt => opt.MapFrom(s => s.CustomId))
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CustomId))
             .ForMember(dest => dest.AdditionalData, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src)));
+        
 
     }
 }

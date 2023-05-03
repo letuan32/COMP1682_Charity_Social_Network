@@ -50,12 +50,11 @@ public class DonationService : IDonationService
     public async Task<bool> UpsertTransactionEntityByExternalIdAsync(string externalId, DonationTransactionEntity entity)
     {
         var existedEntity =
-            await _dbContext.DonationTransactionEntities.FirstOrDefaultAsync(d => d.InternalTransactionId == externalId);
+            await _dbContext.DonationTransactionEntities.AsNoTracking().FirstOrDefaultAsync(d => d.InternalTransactionId == externalId);
         if (existedEntity == null)
         {
             return await CreateTransactionAsync(entity);
         }
-        
         _dbContext.Entry(existedEntity).CurrentValues.SetValues(entity);
         var result = await _dbContext.SaveChangesAsync();
         return result > 0;

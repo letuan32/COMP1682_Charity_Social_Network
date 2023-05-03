@@ -40,8 +40,8 @@ public class DonationDbContext : DbContext
                     case EntityState.Added:
                         entity.CreatedDate = now;
                         entity.UpdatedDate = now;
-                        entity.CreatedBy = _userId;
-                        entity.UpdatedBy = _userId;
+                        entity.CreatedBy ??= _userId;
+                        entity.UpdatedBy ??= _userId;
                         break;
                     case EntityState.Modified:
                         Entry(entity).Property(x => x.CreatedDate).IsModified = false;

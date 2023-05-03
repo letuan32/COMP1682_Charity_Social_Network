@@ -29,9 +29,11 @@ public class PaypalCaptureConsumer : IConsumer<PaypalPaymentCaptureMessage>
 
         try
         {
-            var paypalResponse = await _paypalService.CapturePaymentAsync(context.Message.PaymentId);
+            var paypalResponse = await _paypalService.CapturePaymentAsync(context.Message.PaymentId, context.Message.PostId);
             var donationTransactionEntity = _mapper.Map<DonationTransactionEntity>(paypalResponse);
-
+            donationTransactionEntity.PostId = context.Message.PostId;
+            
+            
             var result =
                 await _donationService.UpsertTransactionEntityByExternalIdAsync(
                     donationTransactionEntity.InternalTransactionId, donationTransactionEntity);
