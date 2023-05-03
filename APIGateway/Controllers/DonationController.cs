@@ -4,7 +4,9 @@ using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedModels.Enums;
 using SharedModels.Paypal;
+using SharedModels.Post;
 using TDonation;
 
 
@@ -85,12 +87,20 @@ public class DonationController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("paypal-event")]
-    public async Task<IActionResult> PaypalCapture([FromBody] object request)
+    public async Task<IActionResult> PaypalCapture([FromBody] PayPalEvent request)
     {
-        var endpoint = await _bus.GetSendEndpoint(new Uri("rabbitmq://localhost/paypal-capture"));
+        if (request.event_type != "PAYMENT.PAYOUTSBATCH.SUCCESS") return Ok();
+            
+        var endpoint = await _bus.GetSendEndpoint(new Uri("rabbitmq://localhost/post-approve-status"));
+        var postId = request.resource.batch_header.sender_batch_header.sender_batch_id.Split('_')[1];
+        var message = new UpdatePostApproveStatusMessage()
+        {
+            PostId = int.Parse(postId),
+            PostApproveStatusEnum = PostApproveStatusEnum.Disbursed,
+        };
         var headers = new Dictionary<string, object>();
         headers["Authorization"] = "Bearer myAccessToken";
-        await endpoint.Send(request, context =>
+        await endpoint.Send(message, context =>
         {
             foreach (var keyValuePair in headers)
             {
@@ -106,7 +116,7 @@ public class DonationController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(Roles = "admin, manager")]
+    [Authorize(Roles = "admin,manager")]
     [Route("disburse")]
     public async Task<IActionResult> Disburse([FromBody] DisburseCommand request)
     {
@@ -149,3 +159,60 @@ public class DonationController : ControllerBase
         throw new NotImplementedException();
     }
 }
+
+// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+public class Amount
+{
+    public string currency { get; set; }
+    public string value { get; set; }
+}
+
+public class BatchHeader
+{
+    public string payout_batch_id { get; set; }
+    public string batch_status { get; set; }
+    public DateTime time_created { get; set; }
+    public DateTime time_completed { get; set; }
+    public SenderBatchHeader sender_batch_header { get; set; }
+    public Amount amount { get; set; }
+    public Fees fees { get; set; }
+    public int payments { get; set; }
+}
+
+public class Fees
+{
+    public string currency { get; set; }
+    public string value { get; set; }
+}
+
+public class Link
+{
+    public string? href { get; set; }
+    public string? rel { get; set; }
+    public string? method { get; set; }
+    public string? encType { get; set; }
+}
+
+public class Resource
+{
+    public BatchHeader batch_header { get; set; }
+    public List<Link> links { get; set; }
+}
+
+public class PayPalEvent
+{
+    public string id { get; set; }
+    public DateTime create_time { get; set; }
+    public string resource_type { get; set; }
+    public string event_type { get; set; }
+    public string summary { get; set; }
+    public Resource resource { get; set; }
+    public List<Link> links { get; set; }
+    public string event_version { get; set; }
+}
+
+public class SenderBatchHeader
+{
+    public string sender_batch_id { get; set; }
+}
+

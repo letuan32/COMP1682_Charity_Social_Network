@@ -30,8 +30,7 @@ public class PaymentGrpcService : Payment.PaymentBase
 
     public override async Task<DisburseDonationReply> DisburseDonation(DisburseDonationRequest request, ServerCallContext context)
     {
-        // var donationAmount = await _donationService.GetDonationAmountByPostId(request.PostId);
-        var donationAmount = 1;
+        var donationAmount = await _donationService.GetDonationAmountByPostId(request.PostId);
 
         if (donationAmount == 0)
         {
@@ -52,7 +51,7 @@ public class PaymentGrpcService : Payment.PaymentBase
                     amount = new Amount()
                     {
                         currency = "USD",
-                        value = 100.ToString()
+                        value = donationAmount.ToString()
                     },
                     note = "Donation from TCharity Community",
                     sender_item_id = new Guid().ToString(),
@@ -62,9 +61,9 @@ public class PaymentGrpcService : Payment.PaymentBase
             },
             sender_batch_header = new SenderBatchHeader()
             {
-                sender_batch_id = Guid.NewGuid().ToString(),
-                email_message = "Disburse donation from TCharity Community",
-                email_subject = "Disburse donation from TCharity Community"
+                sender_batch_id = Guid.NewGuid().ToString() + "_" + request.PostId,
+                email_message = $"Disburse donation from TCharity Community, Post Id = {request.PostId}",
+                email_subject = $"Disburse donation from TCharity Community, Post Id = {request.PostId}"
             }
         };
 
