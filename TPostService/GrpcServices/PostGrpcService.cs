@@ -29,7 +29,7 @@ public class PostGrpcService : PostGrpc.PostGrpcBase
     public override async Task<GetPostsReply> GetUnApprovePosts(GetUnApprovePostsRequest request, ServerCallContext context)
     {
         _logger.LogInformation("Receive grpc GetUnApprovePosts request. {Request}", request);
-        var response = await _mediator.Send(new GetPostsQuery(){IsApproved = false});
+        var response = await _mediator.Send(new GetPostsQuery(){IsApproved = true});
 
         if (response != null)
         {

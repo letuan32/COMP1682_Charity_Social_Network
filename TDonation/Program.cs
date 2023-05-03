@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SharedModels.Options;
 using TDonation.Consumers;
 using TDonation.GrpcServices;
 using TDonation.Infracstructure;
@@ -65,6 +66,7 @@ builder.Services.AddGrpc();
 // Add ENVs IOption
 builder.Services.Configure<ZaloPayOption>(configuration.GetSection("ZaloPay"));
 builder.Services.Configure<PaypalOption>(configuration.GetSection("Paypal"));
+builder.Services.Configure<ShareFirebaseOption>(configuration.GetSection("FirebaseOptions"));
 
 // Add Auto mapper
 builder.Services.AddAutoMapper(typeof(MapperProfile));
@@ -79,6 +81,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 builder.Services.AddScoped<IDonationService, DonationService>();
 builder.Services.AddScoped<IPaypalService, PaypalService>();
+builder.Services.AddScoped<IFirebaseService, FirebaseService>();
+
 
 
 
