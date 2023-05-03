@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using APIGateway.CQRS.Queries;
+using FirebaseAdmin.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIGateway.Controllers;
@@ -28,10 +31,27 @@ public class IdentityController : ControllerBase
     /// <exception cref="NotImplementedException"></exception>
     [HttpPost]
     [Route("auth/register")]
-    public Task<IActionResult> Register()
+    public async Task<IActionResult> Register(Regis regis)
     {
-        // TODO: Define request body, forward the request to Identity service
-        throw new NotImplementedException();
+        UserRecordArgs args = new UserRecordArgs()
+        {
+            Email = regis.Email,
+            EmailVerified = false,
+            PhoneNumber = regis.PhoneNumber,
+            Password = regis.Password,
+            DisplayName = regis.Name,
+            Disabled = false,
+            PhotoUrl = $"https://i.pravatar.cc/150?u={regis.Email}",
+        };
+        
+        var claims = new Dictionary<string, object>()
+        {
+            { ClaimTypes.Role, "user" },
+        };
+        UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(args);
+        await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(userRecord.Uid, claims );
+
+        return Ok(userRecord);
     }
     
     
@@ -41,11 +61,28 @@ public class IdentityController : ControllerBase
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [Route("account")]
-    public Task<IActionResult> CreateAccount()
+    public async Task<IActionResult> CreateAccount(Regis regis)
     {
-        // TODO: Define request body, forward the request to Identity service
-        throw new NotImplementedException();
+        UserRecordArgs args = new UserRecordArgs()
+        {
+            Email = regis.Email,
+            EmailVerified = false,
+            PhoneNumber = regis.PhoneNumber,
+            Password = regis.Password,
+            DisplayName = regis.Name,
+            Disabled = false,
+            PhotoUrl = $"https://i.pravatar.cc/150?u={regis.Email}",
+        };
+        
+        var claims = new Dictionary<string, object>()
+        {
+            { ClaimTypes.Role, "manager" },
+        };
+        UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(args);
+        await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(userRecord.Uid, claims );
+        return Ok(userRecord);
     }
     
     /// <summary>
@@ -55,7 +92,7 @@ public class IdentityController : ControllerBase
     /// <exception cref="NotImplementedException"></exception>
     [HttpPatch]
     [Route("account")]
-    public Task<IActionResult> ActiveAccount()
+    public Task<IActionResult> ActiveAccount(string userId,bool isDisable)
     {
         // TODO: Define request body, forward the request to Identity service
         throw new NotImplementedException();
@@ -94,5 +131,16 @@ public class IdentityController : ControllerBase
         var user = await _mediator.Send(query);
         return Ok(user);
     }
+
+}
+
+public class Regis
+{
+    public string? Email { get; set; }
+    public string? Name { get; set; }
+    public string? Password { get; set; }
+    public string? Location { get; set; }
+    public string? PhoneNumber { get; set; }
+
 
 }

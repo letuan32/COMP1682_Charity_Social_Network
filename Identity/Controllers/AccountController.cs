@@ -28,12 +28,12 @@ public class AccountController : ControllerBase
             Password = regis.Password,
             DisplayName = regis.Name,
             Disabled = false,
-            PhotoUrl = "https://gravatar.com/avatar/77f1202c7e136494c2c26086672e91c0?s=400&d=robohash&r=x",
+            PhotoUrl = $"https://i.pravatar.cc/150?u={regis.Email}",
         };
         
         var claims = new Dictionary<string, object>()
         {
-            { ClaimTypes.Role, regis.Role },
+            { ClaimTypes.Role, "user" }
         };
         UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(args);
         await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(userRecord.Uid, claims );

@@ -2,6 +2,7 @@
 using APIGateway.CQRS.Queries;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.Paypal;
 using TDonation;
@@ -34,6 +35,7 @@ public class DonationController : ControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "user")]
     [HttpPost]
     public async Task<IActionResult> CreateTransaction(CreateDonationTransactionCommand request)
     {
@@ -104,6 +106,7 @@ public class DonationController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize(Roles = "admin, manager")]
     [Route("disburse")]
     public async Task<IActionResult> Disburse([FromBody] DisburseCommand request)
     {

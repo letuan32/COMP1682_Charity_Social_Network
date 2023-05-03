@@ -3,6 +3,7 @@
 using APIGateway.CQRS.Commands.PostCommands;
 using AutoMapper;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.Post;
 using TPostService;
@@ -32,6 +33,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetPostsAsync()
     {
         var response = await _client.GetPostsAsync(new GetPostsRequest());
@@ -43,6 +45,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("un-approve")]
+    [Authorize(Roles = "admin, manager")]
     public async Task<IActionResult> GetPrivatePostsAsync()
     {
         var response = await _client.GetUnApprovePostsAsync(new GetUnApprovePostsRequest());
@@ -55,6 +58,7 @@ public class PostController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreatePostsAsync(CreatePostCommand request)
     {
         _logger.LogInformation("Start sending gRPC request to create post. Request: {@request}", request);
@@ -70,6 +74,7 @@ public class PostController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize]
     [Route("{id}")]
     public async Task<IActionResult> GetPostByIdAsync([FromRoute] int id)
     {
